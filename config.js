@@ -3,6 +3,23 @@
   'use strict';
   const API_URL = '/api/proxy';
   const TOKEN_KEY = 'edutask_session_v1';
+  const USER_HINT_KEY = 'edutask_user_hint_v2';
+  const perfSamples = [];
+  const markApi = (action, elapsed, success, backendMs) => {
+    const row = {action, roundtripMs: Math.round(elapsed), backendMs: Number.isFinite(backendMs)?backendMs:null, ok: success, time:new Date().toLocaleTimeString('id-ID')};
+    perfSamples.push(row); if(perfSamples.length>80) perfSamples.shift();
+    console.info(`[EduTask • API] ${action}: ${row.roundtripMs}ms${row.backendMs===null?'':` • GAS ${row.backendMs}ms`} • ${success?'OK':'ERROR'}`);
+  };
+  const perfReport=()=>{
+    console.group('⚡ EduTask Performance Report');
+    console.table(perfSamples);
+    if (performance.getEntriesByType) {
+      const nav=performance.getEntriesByType('navigation')[0];
+      if(nav) console.table({domReadyMs:Math.round(nav.domContentLoadedEventEnd-nav.startTime), loadMs:Math.round(nav.loadEventEnd-nav.startTime), ttfbMs:Math.round(nav.responseStart-nav.requestStart)});
+    }
+    console.groupEnd(); return perfSamples.slice();
+  };
+  window.EdutaskPerf = Object.freeze({report:perfReport,samples:()=>perfSamples.slice()});
   const READ_ACTIONS = new Set([
     'health','auth.session','dashboard.intern','dashboard.mentor','dashboard.refresh',
     'tasks.list','tasks.get','tasks.activity','records.list','users.list','users.get',
@@ -10,7 +27,8 @@
     'reports.intern','reports.performance','tasks.comments'
   ]);
   const inFlight = new Map();
-  const state = { token: sessionStorage.getItem(TOKEN_KEY) || '', user: null };
+  const safeUserHint = () => { try { return JSON.parse(sessionStorage.getItem(USER_HINT_KEY)||'null'); } catch (_) { return null; } };
+  const state = { token: sessionStorage.getItem(TOKEN_KEY) || '', user: safeUserHint() };
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
   const normalizeError = (error, action) => ({
     code: error?.code || (error?.name === 'AbortError' ? 'TIMEOUT' : 'NETWORK_ERROR'),
@@ -25,6 +43,7 @@
       const retries = reading ? 1 : 0;
       for (let attempt = 0; attempt <= retries; attempt++) {
         const controller = new AbortController();
+        const apiStart = performance.now();
         const timeout = setTimeout(() => controller.abort(), options.timeout || 25000);
         try {
           const response = await fetch(API_URL, {
@@ -36,6 +55,7 @@
           const raw = await response.text();
           let result;
           try { result = JSON.parse(raw); } catch (_) { throw { code: 'INVALID_RESPONSE', message: 'Server mengembalikan respons yang tidak valid.' }; }
+          markApi(action,performance.now()-apiStart,response.ok && !!result.success, Number(result.serverMs));
           if (!response.ok || !result.success) {
             const error = { code: result.code || 'API_ERROR', message: result.message || `HTTP ${response.status}` };
             if (error.code === 'UNAUTHORIZED' || error.code === 'SESSION_EXPIRED') {
@@ -46,6 +66,7 @@
           }
           return result.data;
         } catch (error) {
+          if(error.code==='NETWORK_ERROR'||error.name==='TypeError'||error.name==='AbortError') markApi(action,performance.now()-apiStart,false,null);
           if (attempt < retries && ['AbortError','TypeError'].includes(error?.name)) { await sleep(400 * (attempt + 1)); continue; }
           throw normalizeError(error, action);
         } finally { clearTimeout(timeout); }
@@ -58,8 +79,8 @@
   function setSession(token, user = null) {
     state.token = token || '';
     state.user = user;
-    if (token) sessionStorage.setItem(TOKEN_KEY, token);
-    else sessionStorage.removeItem(TOKEN_KEY);
+    if (token) { sessionStorage.setItem(TOKEN_KEY, token); if(user) sessionStorage.setItem(USER_HINT_KEY, JSON.stringify({id:user.id,fullName:user.fullName,role:user.role})); }
+    else { sessionStorage.removeItem(TOKEN_KEY); sessionStorage.removeItem(USER_HINT_KEY); }
     inFlight.clear();
   }
   function idempotencyKey() {
