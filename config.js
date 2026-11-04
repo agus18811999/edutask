@@ -4,7 +4,7 @@
   const API_URL = '/api/proxy';
   const TOKEN_KEY = 'edutask_session_v1';
   // Same-tab session; do not persist bearer tokens in localStorage by default.
-  const CACHE_TTL = {'users.list':20000,'projects.list':20000,'tasks.list':12000,'notifications.list':12000,'evaluations.list':12000,'records.list':15000,'reports.intern':15000,'reports.performance':15000};
+  const CACHE_TTL = {'directory.snapshot':12000,'records.view':12000,'users.list':20000,'projects.list':20000,'tasks.list':12000,'notifications.list':12000,'evaluations.list':12000,'records.list':15000,'reports.intern':15000,'reports.performance':15000};
   const readCache = new Map();
   const USER_HINT_KEY = 'edutask_user_hint_v2';
   const perfSamples = [];
@@ -25,7 +25,7 @@
   window.EdutaskPerf = Object.freeze({report:perfReport,samples:()=>perfSamples.slice()});
   const READ_ACTIONS = new Set([
     'health','auth.session','dashboard.intern','dashboard.mentor','dashboard.refresh',
-    'tasks.list','tasks.get','tasks.activity','records.list','users.list','users.get',
+    'tasks.list','tasks.get','tasks.activity','records.list','records.view','directory.snapshot','users.list','users.get',
     'projects.list','batches.list','notifications.list','evaluations.list','reports.tasks',
     'reports.intern','reports.performance','tasks.comments'
   ]);
