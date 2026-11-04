@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0ca998">
+  <meta name="description" content="EduTask — smarter tasks, better growth.">
+  <title>Masuk • EduTask</title>
+
+<!-- EduTask Favicon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23087F8C'/%3E%3Cstop offset='1' stop-color='%2330D5C8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='17' fill='url(%23g)'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Arial,sans-serif' font-size='40' font-weight='800' fill='white'%3EE%3C/text%3E%3C/svg%3E">
+
+<meta name="theme-color" content="#12B8A6">
+<meta name="apple-mobile-web-app-title" content="EduTask">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    :root{--deep:#087f8c;--teal:#12b8a6;--ink:#16343b;--muted:#7b9498;--border:#dcefeb;--mint:#ecfffa}
+    *{box-sizing:border-box}body{margin:0;color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif;background:#f9fffd}
+    .layout{min-height:100vh;display:grid;grid-template-columns:minmax(0,1.04fr) minmax(430px,.96fr)}
+    .story{position:relative;min-height:100vh;padding:clamp(36px,5.1vw,90px);background:radial-gradient(circle at 80% 17%,rgba(192,255,238,.72) 0,transparent 32%),linear-gradient(137deg,#087f8c 1%,#10ab9d 53%,#6ee8cc 100%);color:white;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between}
+    .story:after{content:'';position:absolute;width:540px;height:540px;border-radius:50%;border:1px solid #ffffff55;left:-280px;bottom:-320px;box-shadow:0 0 0 70px #ffffff0c,0 0 0 160px #ffffff0a;pointer-events:none}
+    .brand{display:flex;align-items:center;gap:13px;font-weight:800;font-size:24px;letter-spacing:-1.2px;position:relative;z-index:1}
+    .logo{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;color:#087f8c;background:white;font-size:23px;box-shadow:0 12px 28px #044e562a}
+    .tag{font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:800;color:#d2fff2}
+    .story h1{font-size:clamp(42px,5vw,78px);font-weight:800;line-height:1.1;letter-spacing:-3.8px;margin:18px 0 22px;max-width:690px}
+    .story p{font-size:16px;line-height:1.9;max-width:500px;color:#e1fffa}.glass{background:#ffffff25;backdrop-filter:blur(16px);border:1px solid #ffffff66;border-radius:24px;padding:20px 24px;max-width:440px;box-shadow:0 18px 45px #005e6324}
+    .glass strong{display:block;font-size:21px;margin-bottom:7px}.pill{display:inline-flex;align-items:center;gap:7px;border-radius:30px;background:#ffffff24;padding:8px 14px;font-size:12px;font-weight:700;margin-top:20px}
+    .right{display:flex;justify-content:center;align-items:center;padding:48px 35px;min-width:0}
+    .auth{width:min(100%,480px)}.eyebrow{color:var(--deep);font-size:12px;letter-spacing:2.5px;font-weight:800}.auth h2{font-size:clamp(30px,3vw,42px);font-weight:800;letter-spacing:-1.6px;line-height:1.25;margin:13px 0}.desc{color:var(--muted);font-size:14px;line-height:1.8;margin-bottom:30px}
+    .switch{display:flex;padding:5px;background:#eaf7f4;border-radius:15px;gap:5px;margin-bottom:27px}.switch button{flex:1;padding:12px 6px;color:#698d89;font-weight:700;border:0;background:transparent;border-radius:11px;cursor:pointer;transition:.2s}.switch button.active{background:white;color:#087f8c;box-shadow:0 4px 12px #05595d12}
+    label{font-size:12px;font-weight:800;display:block;margin-bottom:9px}.field{margin-bottom:17px}.field input,.field select{display:block;width:100%;height:52px;padding:0 15px;border:1px solid #d4e9e4;background:#fff;border-radius:13px;font:600 13px 'Plus Jakarta Sans',sans-serif;color:#19434a;outline:0;transition:.2s}
+    input:focus,select:focus{border-color:#12b8a6!important;box-shadow:0 0 0 4px #12b8a620}.password{position:relative}.password input{padding-right:57px}.eye{position:absolute;right:10px;top:7px;background:#eef9f6;border:0;border-radius:9px;padding:10px 12px;cursor:pointer;font-size:14px}
+    .submit{width:100%;border:0;background:linear-gradient(115deg,#087f8c,#12b8a6);color:#fff;border-radius:14px;padding:17px 22px;font-weight:800;font-size:14px;box-shadow:0 12px 24px #13b8a52f;cursor:pointer;transition:transform .2s,box-shadow .2s}.submit:hover{transform:translateY(-2px);box-shadow:0 16px 32px #13b8a542}.submit:disabled{opacity:.6;cursor:wait;transform:none}
+    a,.link{color:#087f8c;font-weight:800;text-decoration:none;cursor:pointer}.link{border:0;background:transparent;padding:0;font-size:12px}.subline{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:7px 0 24px}.subline span{font-size:12px;color:#87a19c}
+    .notice{display:none;padding:13px 15px;font-weight:650;font-size:12px;line-height:1.7;border-radius:12px;margin-bottom:19px;border:1px solid}.notice.show{display:block}.notice.error{background:#fff2f1;color:#a83035;border-color:#ffd1ce}.notice.success{background:#eafff3;color:#087b55;border-color:#b7eed8}
+    .footer{margin-top:32px;font-size:11px;color:#94aaa5;display:flex;gap:12px;align-items:center}.dot{width:7px;height:7px;background:#12b8a6;border-radius:50%}button:focus-visible,a:focus-visible{outline:3px solid #8fe6da;outline-offset:3px}
+    @media(max-width:940px){.layout{grid-template-columns:1fr}.story{min-height:320px;padding:34px 28px}.story h1{font-size:36px;letter-spacing:-2px;margin:15px 0}.story p{font-size:13px}.glass,.story .pill{display:none}.right{padding:46px 22px 60px}.auth{max-width:520px}.story .brand{font-size:21px}}
+    @media(max-width:480px){.story{min-height:265px}.story h1{font-size:31px}.story p{line-height:1.6}.right{padding:30px 20px}.auth h2{font-size:30px}.subline{flex-wrap:wrap}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
+  </style>
+</head>
+<body>
+  <main class="layout">
+    <section class="story" aria-label="Tentang EduTask">
+      <div class="brand"><span class="logo">✧</span> EduTask<span style="font-weight:400;opacity:.6">/</span><span style="font-size:12px;letter-spacing:1px;font-weight:700">WORKSPACE</span></div>
+      <div style="position:relative;z-index:1"><span class="tag">THE FUTURE OF INTERNSHIP OPERATIONS</span><h1>Grow together.<br>Achieve more.</h1><p>Satu ruang kerja cerdas untuk tugas, kolaborasi mentor, kemajuan peserta magang, dan perjalanan pembelajaran yang bermakna.</p><span class="pill">✦ &nbsp; Smarter Tasks. Better Growth.</span></div>
+      <div class="glass"><span style="font-size:12px;color:#c5fff1;font-weight:800">BUILT FOR GROWTH</span><strong>Make every milestone count.</strong><span style="font-size:12px;color:#e8fffa;line-height:1.8">Track progress with clarity. Celebrate outcomes with your team.</span></div>
+    </section>
+    <section class="right"><div class="auth">
+      <div class="eyebrow">YOUR JOURNEY STARTS HERE</div><h2 id="heading">Selamat datang kembali.</h2><p class="desc" id="description">Masuk ke ruang kerja EduTask untuk melanjutkan perjalanan produktivitas Anda.</p>
+      <div class="switch" id="tabs" role="tablist"><button type="button" data-tab="login" class="active" role="tab">Masuk</button><button type="button" data-tab="register" role="tab">Daftar melalui undangan</button></div>
+      <div id="notice" class="notice" role="status" aria-live="polite"></div>
+      <form id="form" autocomplete="on" novalidate></form>
+      <div class="footer"><i class="dot"></i><span>Secure internal workspace</span><span>•</span><span>EduTask © 2026</span></div>
+    </div></section>
+  </main>
+  <script src="config.js"></script>
+  <script>
+    (() => {
+      'use strict';
+      const $=s=>document.querySelector(s), api=window.Edutask.api;
+      const params=new URLSearchParams(location.search), tabAllowed=['login','register','forgot','reset'];
+      let tab=tabAllowed.includes(params.get('tab'))?params.get('tab'):'login';
+      const labels={login:['Selamat datang kembali.','Masuk ke ruang kerja EduTask untuk melanjutkan perjalanan produktivitas Anda.'],register:['Mulai perjalanan hebat.','Daftar menggunakan kode undangan dari admin.'],forgot:['Pulihkan akses Anda.','Kami akan mengirimkan kode reset jika email terdaftar.'],reset:['Buat password baru.','Masukkan kode dari email dan tentukan password baru.']};
+      const field=(label,name,type='text',opts={})=>`<div class="field"><label for="${name}">${label}</label><div class="${type==='password'?'password':''}"><input id="${name}" name="${name}" type="${type}" ${opts.autocomplete?'autocomplete="'+opts.autocomplete+'"':''} ${opts.required===false?'':'required'} ${type==='password'?'minlength="12"':''} placeholder="${opts.placeholder||''}" ${opts.value?'value="'+opts.value.replaceAll('"','&quot;')+'"':''} />${type==='password'?`<button type="button" class="eye" data-toggle="${name}" aria-label="Tampilkan password">◉</button>`:''}</div></div>`;
+      function draw() {
+        $('#heading').textContent=labels[tab][0];$('#description').textContent=labels[tab][1];
+        $('#tabs').style.display=['login','register'].includes(tab)?'flex':'none';
+        document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+        $('#notice').className='notice';$('#notice').textContent='';
+        const email=params.get('email')||'';
+        let html='';
+        if(tab==='login') html=field('Email perusahaan','email','email',{autocomplete:'username',placeholder:'nama@perusahaan.com'})+field('Password','password','password',{autocomplete:'current-password',placeholder:'Masukkan password'})+`<div class="subline"><span>Masuk aman tanpa refresh halaman</span><button class="link" type="button" data-go="forgot">Lupa password?</button></div><button class="submit" type="submit">Masuk ke Workspace <span aria-hidden="true">→</span></button>`;
+        if(tab==='register') html=field('Nama lengkap','fullName','text',{autocomplete:'name',placeholder:'Nama lengkap'})+field('Email undangan','email','email',{value:email,placeholder:'nama@perusahaan.com'})+field('Kode undangan','invitationCode','text',{placeholder:'Kode dari admin'})+field('Password (min. 12 karakter)','password','password',{autocomplete:'new-password',placeholder:'Buat password aman'})+field('Ulangi password','confirmPassword','password',{autocomplete:'new-password',placeholder:'Konfirmasi password'})+`<button class="submit" type="submit">Aktifkan akun <span aria-hidden="true">→</span></button>`;
+        if(tab==='forgot') html=field('Email akun','email','email',{placeholder:'nama@perusahaan.com'})+`<div class="subline"><span>Kode berlaku 15 menit</span><button class="link" type="button" data-go="login">Kembali ke login</button></div><button class="submit" type="submit">Kirim kode reset →</button>`;
+        if(tab==='reset') html=field('Email akun','email','email',{value:email,placeholder:'nama@perusahaan.com'})+field('Kode reset 6 digit','code','text',{placeholder:'000000'})+field('Password baru','password','password',{autocomplete:'new-password',placeholder:'Min. 12 karakter'})+field('Konfirmasi password','confirmPassword','password',{autocomplete:'new-password',placeholder:'Ulangi password'})+`<div class="subline"><span>Kode reset satu kali pakai</span><button class="link" type="button" data-go="forgot">Minta kode baru</button></div><button class="submit" type="submit">Simpan password baru →</button>`;
+        $('#form').innerHTML=html;
+        history.replaceState({},'',location.pathname+'?tab='+tab+(email?'&email='+encodeURIComponent(email):''));
+      }
+      function message(text,success=false){const el=$('#notice');el.textContent=text;el.className='notice show '+(success?'success':'error');}
+      async function submit(e) {
+        e.preventDefault();const btn=$('#form button[type=submit]');const data=Object.fromEntries(new FormData(e.currentTarget));
+        const map={login:'auth.login',register:'auth.register',forgot:'auth.forgotPassword',reset:'auth.resetPassword'};
+        if (!e.currentTarget.reportValidity())return;
+        if(data.confirmPassword!==undefined && data.confirmPassword!==data.password){message('Konfirmasi password tidak sesuai.');return;}
+        btn.disabled=true;const original=btn.textContent;btn.textContent='Memproses secara aman…';
+        try {
+          const result=await api(map[tab],data,{timeout:65000});
+          if(tab==='login'){window.Edutask.setSession(result.token,result.user);location.replace('main.html');return;}
+          if(tab==='register'){sessionStorage.setItem('edutask_verify_email',data.email);location.assign('verify.html?email='+encodeURIComponent(data.email));return;}
+          if(tab==='forgot'){message(result.message||'Jika email terdaftar, kode akan dikirim.',true);params.set('email',data.email);setTimeout(()=>{tab='reset';draw();},1100);return;}
+          if(tab==='reset'){tab='login';draw();message('Password berhasil diperbarui. Silakan masuk.',true);return;}
+        } catch(err){message(err.message||'Terjadi kesalahan.');if(err.code==='EMAIL_UNVERIFIED')location.assign('verify.html?email='+encodeURIComponent(data.email));}
+        finally{btn.disabled=false;btn.textContent=original;}
+      }
+      document.addEventListener('click',e=>{
+        const t=e.target.closest('[data-tab],[data-go],[data-toggle]');if(!t)return;
+        if(t.dataset.toggle){const el=document.getElementById(t.dataset.toggle);el.type=el.type==='password'?'text':'password';t.textContent=el.type==='password'?'◉':'◎';return;}
+        tab=t.dataset.tab||t.dataset.go;draw();
+      });
+      $('#form').addEventListener('submit',submit);
+      if(window.Edutask.state.token) api('auth.session').then(()=>location.replace('main.html')).catch(()=>{});
+      draw();
+    })();
+  </script>
+</body>
+</html>
