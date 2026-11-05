@@ -1,4 +1,4 @@
-/* EduTask V6 | instant shell, account-scoped safe summaries, targeted cache invalidation. */
+/* EduTask V14 | instant session shell, scoped summaries, finite timeouts, targeted cache invalidation. */
 (() => {
   'use strict';
   const API_URL='/api/proxy';
@@ -6,18 +6,20 @@
   const SCOPE_PREFIX='edutask:v6:summary:';
   // Every record or user detail stays only in RAM; never persist token or sensitive rows.
   const TTL={
-    'directory.snapshot':90000,'references.snapshot':180000,'records.view':75000,
+    'references.snapshot':240000,
+    'directory.snapshot':90000,'records.view':75000,
     'users.list':90000,'projects.list':90000,'batches.list':90000,
-    'tasks.list':30000,'tasks.get':20000,'notifications.list':30000,
+    'tasks.list':45000,'tasks.get':60000,'notifications.list':30000,
     'evaluations.list':45000,'records.list':75000,'reports.intern':45000,
     'reports.performance':45000,'dashboard.mentor':30000,'dashboard.intern':30000,
-    'dashboard.refresh':30000,'dashboard.metrics':30000
+    'dashboard.refresh':25000,'dashboard.metrics':25000
   };
   const READ_ACTIONS=new Set(['health','auth.session','dashboard.intern','dashboard.mentor','dashboard.refresh','dashboard.metrics',
     'tasks.list','tasks.get','tasks.activity','records.list','records.view','references.snapshot',
     'directory.snapshot','users.list','users.get','projects.list','batches.list','notifications.list',
     'evaluations.list','reports.tasks','reports.intern','reports.performance','tasks.comments']);
   const readCache=new Map(), inFlight=new Map(), perfSamples=[];
+  const inflightStats={cacheHits:0,deduped:0,requests:0,errors:0};
   const readHint=()=>{try{return JSON.parse(sessionStorage.getItem(USER_HINT_KEY)||'null')}catch(_){return null}};
   const state={token:sessionStorage.getItem(TOKEN_KEY)||'',user:readHint()};
   const keyFor=(action,payload)=>JSON.stringify([state.user?.id||'unknown',state.user?.role||'unknown',action,payload]);
@@ -29,10 +31,14 @@
     perfSamples.push(item);if(perfSamples.length>120)perfSamples.shift();
     console.info(`⚡ [EduTask API] ${action}: ${item.roundtripMs}ms${item.backendMs===null?'':` • GAS ${item.backendMs}ms`} • ${success?'OK':'FAIL'}`);
   }
-  function report(){console.group('⚡ EduTask Instant V6 Performance');console.table(perfSamples);
+  function report(){
+    console.group('⚡ EduTask V14 · Performance Diagnostics');console.table(perfSamples);
+    const successful=perfSamples.filter(x=>x.ok).map(x=>x.roundtripMs).sort((a,b)=>a-b);
+    const percentile=p=>successful.length?successful[Math.min(successful.length-1,Math.ceil(successful.length*p)-1)]:null;
+    console.table({...inflightStats,p50Ms:percentile(.5),p95Ms:percentile(.95),ramKeys:readCache.size,inFlight:inFlight.size});
     const n=performance.getEntriesByType?.('navigation')?.[0];if(n)console.table({domReadyMs:Math.round(n.domContentLoadedEventEnd-n.startTime),loadMs:Math.round(n.loadEventEnd-n.startTime),ttfbMs:Math.round(n.responseStart-n.requestStart)});
     console.groupEnd();return perfSamples.slice();}
-  window.EdutaskPerf=Object.freeze({report,samples:()=>perfSamples.slice()});
+  window.EdutaskPerf=Object.freeze({report,samples:()=>perfSamples.slice(),stats:()=>({...inflightStats})});
   // Only numeric aggregates are eligible for disk persistence; no names, emails, tasks or IDs in payload.
   function summaryKey(user=state.user){return user?.id&&user?.role?SCOPE_PREFIX+encodeURIComponent(user.id)+':'+user.role:null;}
   function toSafeSummary(d){
@@ -77,12 +83,13 @@
   async function api(action,payload={},options={}){
     const reading=READ_ACTIONS.has(action)&&!(action==='tasks.comments'&&payload?.mode==='add');
     const key=keyFor(action,payload),ttl=TTL[action]||0,requestToken=state.token;
-    if(reading&&!options.fresh){const saved=readCache.get(key);if(saved&&Date.now()-saved.time<ttl){console.debug(`⚡ [EduTask Cache] ${action} RAM ${Date.now()-saved.time}ms`);return saved.data;}}
-    if(reading&&options.dedupe!==false&&inFlight.has(key))return inFlight.get(key);
+    if(reading&&!options.fresh){const saved=readCache.get(key);if(saved&&Date.now()-saved.time<ttl){inflightStats.cacheHits++;console.debug(`⚡ [EduTask Cache] ${action} RAM ${Date.now()-saved.time}ms`);return saved.data;}}
+    if(reading&&options.dedupe!==false&&inFlight.has(key)){inflightStats.deduped++;return inFlight.get(key);}
     const execute=async()=>{
-      const retries=reading?1:0;
+      // Don't retry slow/time-out GAS calls: a second full timeout makes the UI appear frozen.
+      const retries=reading&&!options.noRetry?1:0;
       for(let attempt=0;attempt<=retries;attempt++){
-        const controller=new AbortController(),start=performance.now();const timeout=setTimeout(()=>controller.abort(),options.timeout||25000);
+        const controller=new AbortController(),start=performance.now();inflightStats.requests++;const timeout=setTimeout(()=>controller.abort(),options.timeout||17000);
         try{
           const response=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
             credentials:'same-origin',cache:'no-store',signal:controller.signal,
@@ -98,13 +105,18 @@
           if(!reading)invalidateRelated(action,payload);
           return result.data;
         }catch(error){
-          if(attempt<retries&&['AbortError','TypeError'].includes(error?.name)){await sleep(300*(attempt+1));continue;}
-          throw normalizeError(error,action);
+          if(attempt<retries&&error?.name==='TypeError'){await sleep(180*(attempt+1));continue;}
+          inflightStats.errors++;throw normalizeError(error,action);
         }finally{clearTimeout(timeout)}
       }
     };
     const promise=execute();if(reading&&options.dedupe!==false)inFlight.set(key,promise);
     try{return await promise}finally{if(reading&&inFlight.get(key)===promise)inFlight.delete(key)}
+  }
+  async function prefetch(action,payload={},options={}){
+    if(!state.token)return null;
+    try{return await api(action,payload,{timeout:options.timeout||13000,noRetry:true});}
+    catch(e){console.debug('[EduTask Prefetch]',action,e.code||e.message);return null;}
   }
   function setSession(token,user=null){
     if(!token)scoped.clear();
@@ -114,5 +126,5 @@
     inFlight.clear();readCache.clear();
   }
   function idempotencyKey(){if(crypto?.randomUUID)return crypto.randomUUID();return [...crypto.getRandomValues(new Uint8Array(16))].map(x=>x.toString(16).padStart(2,'0')).join('')}
-  window.Edutask=Object.freeze({api,state,setSession,idempotencyKey,invalidateReads,invalidateRelated,peek,scoped,API_URL,TOKEN_KEY});
+  window.Edutask=Object.freeze({api,prefetch,state,setSession,idempotencyKey,invalidateReads,invalidateRelated,peek,scoped,API_URL,TOKEN_KEY});
 })();
