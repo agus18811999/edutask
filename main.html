@@ -415,10 +415,277 @@ html{scroll-behavior:smooth}body{background:radial-gradient(circle at 96% 4%,#e1
 .growth-fieldset .field:has([name="programId"]){grid-column:1/-1}
 .growth-fieldset .field:has([name="programId"])>.growth-program-picker{margin-top:10px}
 
+
+/* ==============================================================
+   EDUTASK V12 — FINORA-STYLE INSTANT DASHBOARD LOADING
+   Same composition as Finora: live shell & hero, 4 KPI placeholders,
+   analytics chart skeleton and activity-feed skeleton.
+   Scoped styles to avoid changing other EduTask modules.
+   ============================================================== */
+#page .ed-initial-boot{width:100%;min-width:0;max-width:100%;display:grid;gap:20px;animation:edBootAppear .22s ease-out both}
+.ed-boot-hero{position:relative;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,.78fr);align-items:center;gap:24px;min-height:288px;overflow:hidden;border-radius:26px;background:radial-gradient(ellipse at 77% -18%,rgba(134,255,216,.19),transparent 52%),linear-gradient(111deg,#06707e 0%,#049a98 57%,#32cdb4 100%);color:white;padding:clamp(24px,3vw,37px);border:1px solid rgba(255,255,255,.23);box-shadow:0 22px 44px rgba(7,132,123,.16);isolation:isolate}
+.ed-boot-hero::before,.ed-boot-hero::after{content:'';position:absolute;pointer-events:none;border:1px solid rgba(255,255,255,.2);width:470px;height:470px;border-radius:50%;top:-270px;right:-75px;box-shadow:0 0 0 54px rgba(255,255,255,.035),0 0 0 108px rgba(255,255,255,.024);z-index:-1}
+.ed-boot-hero::after{width:250px;height:250px;right:auto;top:auto;left:-160px;bottom:-195px;box-shadow:0 0 0 62px rgba(255,255,255,.032)}
+.ed-boot-copy,.ed-boot-hero-glass{min-width:0;position:relative}
+.ed-boot-eyebrow{display:inline-flex;align-items:center;gap:9px;border-radius:100px;background:rgba(255,255,255,.13);border:1px solid rgba(222,255,246,.44);padding:10px 14px;font-size:9px;letter-spacing:1.35px;font-weight:800;max-width:100%;line-height:1.3}
+.ed-boot-signal{width:7px;height:7px;border-radius:50%;background:#6cffbd;box-shadow:0 0 0 4px rgba(96,255,201,.16),0 0 14px rgba(133,255,220,.7);flex:none}
+.ed-boot-identity{display:flex;align-items:center;gap:13px;margin:23px 0 0}
+.ed-boot-identity>span{width:55px;height:55px;display:grid;place-items:center;flex:none;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.4);border-radius:17px;font-size:25px}
+.ed-boot-identity>div{font-size:10px;font-weight:800;letter-spacing:2px;color:#d7fff6}
+.ed-boot-hero h1{font-size:clamp(26px,2.85vw,39px);line-height:1.22;letter-spacing:-1.4px;font-weight:850;margin:11px 0 11px;max-width:740px;color:#fff}
+.ed-boot-description{font-size:12px;line-height:1.85;color:#e0fff6;max-width:610px;margin:0}
+.ed-boot-progress{display:inline-flex;align-items:center;gap:10px;margin-top:20px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);font-weight:750;font-size:10px;color:#fff;max-width:100%}
+.ed-boot-ring{width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.4);border-top-color:white;display:inline-block;flex:none;animation:edBootSpin 1s linear infinite}
+.ed-boot-dots{font-size:17px;letter-spacing:2px;opacity:.7}
+.ed-boot-hero-glass{border:1px solid rgba(255,255,255,.5);border-radius:23px;min-height:188px;padding:24px 26px;display:grid;align-content:center;gap:17px;background:linear-gradient(120deg,rgba(255,255,255,.2),rgba(240,255,255,.08));box-shadow:inset 0 1px rgba(255,255,255,.2);backdrop-filter:blur(8px)}
+.ed-boot-glass-divider{height:1px;background:rgba(255,255,255,.26);width:100%}
+.ed-boot-light,.ed-boot-bar,.ed-boot-dot{display:block;position:relative;overflow:hidden;background:linear-gradient(100deg,rgba(255,255,255,.14) 8%,rgba(255,255,255,.38) 29%,rgba(255,255,255,.15) 55%);background-size:260% 100%;animation:edBootShimmer 1.6s ease-in-out infinite;border-radius:9px}
+.ed-boot-light{height:13px;width:52%}.ed-boot-light.wide{width:75%}.ed-boot-light.short{width:38%;height:10px}.ed-boot-light.line-strong{height:39px;width:78%;border-radius:10px}
+.ed-boot-glass-row{display:flex;gap:12px;align-items:center}
+.ed-boot-glass-row .ed-boot-light{flex:none}
+.ed-boot-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+.ed-boot-kpi{min-height:148px;padding:22px 20px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;gap:13px;border-radius:23px;background:linear-gradient(155deg,#fff,#fcfffe);border:1px solid #dcece7;box-shadow:0 12px 28px rgba(10,112,103,.05)}
+.ed-boot-kpi-symbol{position:absolute;right:20px;top:20px;width:43px;height:43px;border-radius:14px;background:linear-gradient(135deg,#ecfcf7,#e2f8f3);display:grid;place-items:center}
+.ed-boot-bar{height:11px;background-image:linear-gradient(100deg,#eaf1ef 6%,#d9e9e4 32%,#eef5f2 56%);border-radius:9px;width:55%}
+.ed-boot-bar.sm{height:9px;width:34%}.ed-boot-bar.lg{height:29px;width:65%;border-radius:11px}.ed-boot-bar.md{width:76%}.ed-boot-bar.icon{height:17px;width:17px;border-radius:6px}
+.ed-boot-body-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:17px;align-items:stretch}
+.ed-boot-pane{min-width:0;overflow:hidden;border:1px solid #e3eeea;background:linear-gradient(160deg,#fff,#fcfffe);border-radius:24px;padding:25px 24px;min-height:292px;box-shadow:0 12px 32px rgba(10,112,103,.045)}
+.ed-boot-pane-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:20px}.ed-boot-pane-header{display:grid;gap:10px;min-width:0}.ed-boot-pill{display:block;width:70px;height:23px;border-radius:9px;background:linear-gradient(100deg,#f2f8f6,#e9f2ee,#f4faf7);background-size:200% 100%;animation:edBootShimmer 1.6s ease-in-out infinite}
+.ed-boot-chart{height:178px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px;border-bottom:1px solid #e8f2ef;padding:6px 4px 0}
+.ed-boot-chart>i{display:block;width:11%;max-width:44px;border-radius:10px 10px 0 0;background:linear-gradient(0deg,#a9eae0,#e9f8f5);opacity:.78;animation:edBootPulsate 1.4s ease-in-out infinite alternate}
+.ed-boot-chart>i:nth-child(2n){animation-delay:.25s}.ed-boot-chart>i:nth-child(3n){animation-delay:.45s}
+.ed-boot-feed{display:grid;gap:13px;margin-top:5px}
+.ed-boot-feed-row{display:flex;align-items:center;gap:13px;padding-bottom:11px;border-bottom:1px solid #f0f6f3;min-width:0}
+.ed-boot-dot{width:31px;height:31px;border-radius:11px;flex:none;background-image:linear-gradient(100deg,#e6f4f0,#d9ede7,#edf7f4)}
+.ed-boot-feed-copy{flex:1;min-width:0;display:grid;gap:9px}.ed-boot-feed-end{width:17%;min-width:32px}
+.ed-boot-nav{padding:9px 13px;display:grid;gap:16px;pointer-events:none}.ed-boot-nav>span{height:30px;border-radius:10px;background:linear-gradient(100deg,#eff7f3,#e5f3ef,#f4fbf8);background-size:200% 100%;animation:edBootShimmer 1.7s ease-in-out infinite}.ed-boot-nav>span:nth-child(3n){width:76%}
+.ed-boot-reveal>#page,.ed-boot-reveal>*{animation:edBootAppear .28s ease-out both}
+@keyframes edBootShimmer{0%{background-position:160% 0}100%{background-position:-130% 0}}
+@keyframes edBootPulsate{from{opacity:.47}to{opacity:.95}}
+@keyframes edBootSpin{to{transform:rotate(360deg)}}
+@keyframes edBootAppear{from{opacity:.7;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1120px){.ed-boot-hero{grid-template-columns:1fr minmax(225px,.66fr);gap:16px}.ed-boot-hero-glass{padding:19px}.ed-boot-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:840px){.ed-boot-hero{grid-template-columns:1fr;min-height:0}.ed-boot-hero-glass{min-height:120px;grid-template-columns:1fr 1fr;gap:10px}.ed-boot-glass-divider{grid-column:1/-1}.ed-boot-body-grid{grid-template-columns:1fr}}
+@media(max-width:520px){#page .ed-initial-boot{gap:12px}.ed-boot-hero{border-radius:20px;padding:23px 18px;gap:19px}.ed-boot-hero h1{font-size:27px;line-height:1.22;margin-top:10px}.ed-boot-identity{margin-top:18px;gap:9px}.ed-boot-identity>span{width:43px;height:43px;border-radius:13px}.ed-boot-identity>div{font-size:9px;letter-spacing:1.2px}.ed-boot-description{font-size:11px}.ed-boot-progress{margin-top:15px;font-size:9px;white-space:normal}.ed-boot-hero-glass{border-radius:17px;padding:17px;min-height:105px}.ed-boot-kpis{gap:9px}.ed-boot-kpi{min-height:112px;padding:15px 14px;border-radius:17px;gap:10px}.ed-boot-kpi-symbol{right:12px;top:12px;height:34px;width:34px;border-radius:11px}.ed-boot-bar.lg{height:24px}.ed-boot-pane{border-radius:19px;padding:19px 17px;min-height:245px}.ed-boot-chart{height:147px}.ed-boot-pane-top{margin-bottom:14px}}
+@media(max-width:350px){.ed-boot-kpis{grid-template-columns:1fr}.ed-boot-kpi{min-height:85px}}
+@media(prefers-reduced-motion:reduce){.ed-initial-boot,.ed-boot-bar,.ed-boot-dot,.ed-boot-light,.ed-boot-pill,.ed-boot-chart>i,.ed-boot-ring,.ed-boot-nav>span{animation:none!important}}
+
+
+/* ===== EDUTASK V13 — sidebar integrity / verified startup ===== */
+.sidebar{min-width:0;max-width:282px;overflow-x:hidden!important}
+.sidebar .menu-scroll{min-height:0;min-width:0;max-width:100%;overflow-x:hidden!important;overflow-y:auto;scrollbar-width:none;overscroll-behavior:contain}
+.sidebar .menu-scroll::-webkit-scrollbar{width:0;height:0;display:none}
+.sidebar .menu-group{max-width:100%;overflow-wrap:anywhere}
+.sidebar .nav-item{width:calc(100% - 10px);max-width:calc(100% - 10px);min-width:0;overflow:hidden;gap:10px}
+.sidebar .nav-item>span:nth-child(2){min-width:0;flex:1;overflow-wrap:anywhere;white-space:normal;line-height:1.38}
+.sidebar .nav-item .indicator{flex-shrink:0}
+.sidebar .workspace-card{min-width:0;overflow:hidden}
+.sidebar .workspace-card>div:last-child{min-width:0}
+.sidebar .workspace-card b,.sidebar .workspace-card small{overflow-wrap:anywhere}
+.ed-profile-chip img,.avatar img,.mini-person img{width:100%;height:100%;display:block;object-fit:cover;border-radius:inherit}
+body.ed-auth-booting .sidebar .workspace-card,
+body.ed-auth-booting .sidebar .menu-scroll,
+body.ed-auth-booting .sidebar .profile-card{visibility:hidden;pointer-events:none}
+body.ed-auth-booting .top-actions{visibility:hidden;pointer-events:none}
+body.ed-auth-booting #workspaceSync{visibility:visible}
+body.ed-auth-ready .sidebar .workspace-card,
+body.ed-auth-ready .sidebar .menu-scroll,
+body.ed-auth-ready .sidebar .profile-card{animation:edBootAppear .24s ease-out both}
+.ed-boot-error{margin:clamp(18px,5vw,60px) auto;max-width:660px;padding:clamp(23px,4vw,46px);border:1px solid #cfe9e0;background:#fff;box-shadow:0 18px 42px #005b6a12;border-radius:25px;text-align:center}
+.ed-boot-error-icon{margin:0 auto 15px;display:grid;place-items:center;width:56px;height:56px;border-radius:16px;background:#fff1e8;color:#c75d36;font-size:28px;font-weight:800}
+.ed-boot-error h2{font-size:clamp(19px,3vw,27px);color:#153e43}.ed-boot-error p{color:#708d87;line-height:1.8}.ed-boot-error-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:23px}
+.v7-aside-number .ed-count{font-variant-numeric:tabular-nums;letter-spacing:-1.2px;font-size:clamp(33px,3.1vw,45px)}
+@media(max-width:850px){.sidebar{max-width:270px}}
+/* ===== EDUTASK V13 — polished profile edit & actual photo upload ===== */
+.ed-account-layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,.9fr);align-items:start;gap:18px;max-width:100%;margin-top:19px}
+.ed-account-primary,.ed-account-security,.ed-account-privacy{min-width:0;border:1px solid #d9eae4;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 15px 38px #085b5810}
+.ed-account-banner{position:relative;overflow:hidden;min-height:155px;padding:27px clamp(20px,3vw,32px);background:radial-gradient(circle at 85% 6%,#baffdf29,transparent 34%),linear-gradient(110deg,#074e58,#087e81 60%,#16bc9f);color:#fff;isolation:isolate}
+.ed-account-banner::after{content:'';position:absolute;z-index:-1;border:1px solid #ffffff2e;border-radius:50%;width:260px;height:260px;right:-70px;top:-174px;box-shadow:0 0 0 44px #ffffff09,0 0 0 86px #ffffff08}
+.ed-account-overline{color:#0a9b91;font-size:9px;font-weight:850;letter-spacing:1.5px}
+.ed-account-banner .ed-account-overline{color:#baffee}.ed-account-banner h2{color:#fff;font-size:clamp(21px,2.3vw,29px);letter-spacing:-1px;margin:10px 0 8px;line-height:1.2}.ed-account-banner p{max-width:570px;line-height:1.7;color:#d6fff5;font-size:11px;margin:0}.ed-account-banner-spark{position:absolute;right:35px;bottom:18px;font-size:63px;color:#ffffff80}
+.ed-account-profile{padding:clamp(18px,2.3vw,30px)}
+.ed-account-photo-row{display:flex;gap:19px;align-items:center;min-width:0;padding-bottom:23px;border-bottom:1px solid #e8f2ee;margin-bottom:25px}
+.ed-account-photo{width:94px;height:94px;flex:0 0 94px;display:grid;place-items:center;border:5px solid #fff;outline:1px solid #bbe9dc;border-radius:25px;overflow:hidden;box-shadow:0 13px 28px #007e7430;background:linear-gradient(135deg,#058d92,#28cfad);font-size:27px;font-weight:850;color:#fff}
+.ed-account-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.ed-account-photo-info{min-width:0;flex:1}.ed-account-photo-info>strong{display:block;color:#16474d;font-size:clamp(15px,1.6vw,19px);margin:5px 0}.ed-account-photo-info>span{font-size:11px;color:#829d95;display:block;line-height:1.5}
+.ed-account-photo-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:14px}.ed-account-photo-actions input[type=file]{display:none}
+.ed-account-photo-info>small{font-size:10px;line-height:1.6;color:#7c9e96;display:block;margin-top:10px}
+.ed-account-section-title{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:21px}.ed-account-section-title span:first-child{font-size:9px;color:#049f93;letter-spacing:1.3px;font-weight:800}.ed-account-section-title h3{color:#154247;letter-spacing:-.5px;font-size:18px;margin:6px 0 0}
+.ed-account-state{display:inline-flex;align-items:center;gap:7px;background:#ebfff7;border:1px solid #c5f0df;border-radius:100px;padding:7px 10px;font-size:10px;color:#088771;font-weight:800}.ed-account-state i{width:6px;height:6px;border-radius:50%;background:#15c49b}
+.ed-account-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.ed-account-fields>.field{min-width:0}.ed-account-fields>.field.wide{grid-column:1/-1}.ed-account-fields .input,.ed-account-security .input{width:100%;min-height:46px;border-radius:13px;background:#fbfefd;border:1px solid #dcece7}.ed-account-fields .input:disabled{background:#f4f9f7;color:#7f9993}
+.ed-account-save{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;border-top:1px solid #edf3f0;margin-top:22px;padding-top:20px}.ed-account-save span{font-size:10px;color:#829d95}.ed-account-save span i{color:#0cae95;font-style:normal}
+.ed-account-side{display:grid;gap:17px;min-width:0}.ed-account-security{padding:clamp(20px,2.4vw,29px)}.ed-account-security-top{display:flex;align-items:center;gap:13px}.ed-account-shield{display:grid;place-items:center;width:49px;height:49px;flex:none;border-radius:15px;background:linear-gradient(140deg,#d9fff0,#d5f6f5);color:#078d89;font-size:25px}
+.ed-account-security h3{color:#153e43;font-size:19px;letter-spacing:-.6px;margin:5px 0}.ed-account-security>p{line-height:1.75;color:#71958d;margin:20px 0}.ed-account-security .field{margin-bottom:17px}.ed-account-security .btn{width:100%;min-height:46px}
+.ed-account-privacy{background:linear-gradient(135deg,#edfff8,#f7fffe);padding:24px;border-color:#cceee3}.ed-account-privacy>span{font-size:10px;font-weight:800;letter-spacing:1.2px;color:#078e84}.ed-account-privacy h4{font-size:17px;color:#164a4a;margin:12px 0 9px}.ed-account-privacy p{font-size:11px;line-height:1.8;color:#71968e;margin:0}
+@media(max-width:1100px){.ed-account-layout{grid-template-columns:1fr}.ed-account-side{grid-template-columns:1fr 1fr}}
+@media(max-width:740px){.ed-account-side{grid-template-columns:1fr}.ed-account-fields{grid-template-columns:1fr}.ed-account-fields>.field.wide{grid-column:auto}}
+@media(max-width:500px){.ed-account-photo-row{align-items:flex-start;gap:13px}.ed-account-photo{height:71px;width:71px;flex-basis:71px;border-radius:19px;font-size:19px}.ed-account-photo-actions .btn{padding:9px;font-size:10px}.ed-account-banner{padding:22px}.ed-account-banner-spark{font-size:40px;right:20px}.ed-account-save .btn{width:100%}}
+@media(prefers-reduced-motion:reduce){body.ed-auth-ready .sidebar .workspace-card,body.ed-auth-ready .sidebar .menu-scroll,body.ed-auth-ready .sidebar .profile-card{animation:none}}
+
+/* ===== V13.1 polish patch: sidebar overflow, overview hero metric spacing, refresh-first-paint stability ===== */
+.sidebar,.menu-scroll{overflow-x:hidden!important}
+.menu-scroll{overflow-y:auto!important;min-width:0;padding-right:4px;overscroll-behavior:contain}
+.nav-item,.workspace-card,.profile-card{max-width:100%;min-width:0}
+.nav-item{justify-content:flex-start}.nav-item span:last-child,.nav-item b,.nav-item small{min-width:0;overflow:hidden;text-overflow:ellipsis}
+#page,.content,.main{min-width:0}
+.v7-overview-progress{display:grid;grid-template-columns:minmax(138px,160px) minmax(0,1fr);align-items:center;gap:22px}
+.v7-overview-ring{width:148px;height:148px;min-width:148px;min-height:148px;margin:0 auto}
+.v7-overview-ring>div{display:grid;place-items:center;text-align:center;line-height:1.05;padding:10px}
+.v7-overview-ring strong{display:block;font-size:clamp(22px,2.3vw,34px);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-1px;white-space:nowrap}
+.v7-overview-ring small{display:block;margin-top:6px;line-height:1.25}
+.v7-overview-numbers{display:grid;gap:14px;align-content:center;min-width:0}
+.v7-overview-numbers div{min-width:0}
+.v7-overview-numbers small{display:block;margin-bottom:5px;line-height:1.4}
+.v7-overview-numbers strong{display:block;font-size:clamp(18px,2vw,28px);line-height:1.05;letter-spacing:-.6px;font-variant-numeric:tabular-nums;white-space:nowrap}
+body.ed-auth-booting .main{opacity:1}
+body.ed-auth-booting #page>*:not(.ed-initial-boot):not(.ed-boot-error){display:none!important}
+body.ed-auth-booting .topbar{backdrop-filter:blur(18px)}
+@media(max-width:980px){.v7-overview-progress{grid-template-columns:1fr;justify-items:center;text-align:center}.v7-overview-numbers{width:100%;grid-template-columns:repeat(2,minmax(0,1fr));text-align:left}}
+@media(max-width:620px){.sidebar{padding-inline:12px}.workspace-card{margin-inline:4px}.menu-group{margin-left:12px;margin-right:12px}.nav-item{margin-inline:0}.v7-overview-ring{width:128px;height:128px;min-width:128px;min-height:128px}.v7-overview-numbers{grid-template-columns:1fr;width:100%;text-align:center}}
+
+
+/* ===== V13.3: exact centered metrics, vector refresh, atomic route transitions ===== */
+.v7-overview-progress{align-items:center}
+.v7-overview-ring{display:grid;place-items:center;aspect-ratio:1;border-radius:50%}
+.v7-overview-ring>div{
+ display:flex!important;flex-direction:column!important;align-items:center!important;
+ justify-content:center!important;gap:4px!important;
+ width:100%;height:100%;padding:8px 6px!important;
+ text-align:center;min-width:0;min-height:0;
+}
+.v7-overview-ring strong{display:block!important;margin:0!important;font-size:clamp(22px,2.3vw,34px);line-height:1.05!important;white-space:nowrap;letter-spacing:-1px}
+.v7-overview-ring small{display:block!important;margin:0!important;font-size:9px;line-height:1.3!important;white-space:nowrap}
+.ed-refresh-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:17px;height:17px;line-height:1;transform-origin:center center;vertical-align:middle}
+.ed-refresh-icon svg{display:block;height:17px;width:17px;stroke:currentColor}
+[data-action="refresh"]{display:inline-flex;align-items:center;justify-content:center;gap:7px;vertical-align:middle}
+.ed-global-refresh{min-height:42px}
+.ed-global-refresh .ed-refresh-icon{width:17px;height:17px}
+.v7-overview-link{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:36px;padding:8px 12px}
+.is-refreshing .ed-refresh-icon{animation:edRotate .85s linear infinite}
+@media(max-width:980px){.v7-overview-ring{min-width:130px;min-height:130px}}
+@media(max-width:620px){.v7-overview-ring{width:128px;min-width:128px;height:128px;min-height:128px}.v7-overview-ring strong{font-size:27px}.v7-overview-ring small{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.is-refreshing .ed-refresh-icon{animation:none!important}}
+
+/* EduTask V15 — Overview-only composition. Fully scoped: other modules untouched. */
+#page .edv-overview{min-width:0;display:block}
+#page .edv-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:21px 0 0}
+#page .edv-kpi{--edv-accent:#10b7a2;position:relative;min-width:0;min-height:148px;overflow:hidden;isolation:isolate;padding:20px 20px 19px;border-radius:21px;background:linear-gradient(155deg,#fff 3%,#f8fefd 100%);border:1px solid #d8eee7;box-shadow:0 9px 30px rgba(8,87,78,.07);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+#page .edv-kpi:before{content:"";position:absolute;z-index:-1;inset:0 0 auto;height:3px;background:linear-gradient(90deg,var(--edv-accent),#aaf6dc)}
+#page .edv-kpi:after{content:"";position:absolute;right:-34px;top:-58px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--edv-accent) 11%,transparent) 0%,transparent 65%);pointer-events:none}
+#page .edv-kpi:hover{transform:translateY(-3px);border-color:#a0ded0;box-shadow:0 18px 38px rgba(8,87,78,.11)}
+#page .edv-kpi-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;min-width:0}
+#page .edv-kpi-label{display:block;color:#72958e;font-size:10px;font-weight:800;line-height:1.5;letter-spacing:.7px;text-transform:uppercase;max-width:calc(100% - 46px)}
+#page .edv-kpi-icon{flex:0 0 40px;height:40px;display:grid;place-items:center;background:linear-gradient(140deg,#ebfffa,#d9f9ed);border:1px solid #cdf0e5;color:#099c91;border-radius:13px;box-shadow:0 5px 14px #05927d0b}
+#page .edv-kpi-icon svg{width:20px;height:20px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+#page .edv-kpi-value{display:block;margin:9px 0 5px;color:#153e40;font-size:clamp(27px,2.9vw,36px);font-variant-numeric:tabular-nums;letter-spacing:-1.6px;line-height:1;font-weight:800}
+#page .edv-kpi-foot{display:flex;gap:7px;align-items:center;justify-content:space-between;color:#7b9c95;font-size:10px;line-height:1.55;min-width:0}
+#page .edv-kpi-foot span{min-width:0;overflow-wrap:anywhere}
+#page .edv-kpi-foot i{flex:0 0 28px;height:5px;border-radius:6px;background:linear-gradient(90deg,var(--edv-accent),#a4e4d4);opacity:.85;transform:skewX(-22deg)}
+#page .edv-kpi.cyan{--edv-accent:#0c97aa}#page .edv-kpi.blue{--edv-accent:#5795d2}#page .edv-kpi.gold{--edv-accent:#efa658}
+#page .edv-intro{margin:30px 0 18px;display:flex;align-items:end;justify-content:space-between;gap:16px;flex-wrap:wrap;min-width:0}
+#page .edv-intro-copy{min-width:0;max-width:700px}
+#page .edv-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#079889;font-weight:800}
+#page .edv-eyebrow:before{content:"";height:7px;width:7px;border-radius:50%;background:#18c5a8;box-shadow:0 0 0 4px #d9f9ee}
+#page .edv-intro h3{font-size:clamp(22px,2.6vw,30px);letter-spacing:-1.3px;line-height:1.16;font-weight:800;margin:10px 0 8px;color:#173e42}
+#page .edv-intro p{font-size:11px;color:#789890;line-height:1.75;margin:0}
+#page .edv-sync-chip{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;background:#f0fff8;border:1px solid #cdeee3;color:#078a7e;border-radius:999px;padding:10px 13px;font-weight:800;font-size:10px;font-variant-numeric:tabular-nums}
+#page .edv-sync-chip svg{width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+#page .edv-insights{display:grid;grid-template-columns:minmax(0,1.27fr) minmax(0,1fr);align-items:start;gap:18px;min-width:0}
+#page .edv-insight{position:relative;min-width:0;overflow:hidden;border:1px solid #dceee8;border-radius:24px;background:linear-gradient(155deg,#fff,#fbfffd);box-shadow:0 12px 36px rgba(5,98,83,.06);padding:clamp(20px,2.2vw,29px);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+#page .edv-insight:hover{border-color:#b2e6d7;box-shadow:0 17px 42px rgba(5,98,83,.105)}
+#page .edv-insight:before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,#13bba6,#7ee6d2 47%,transparent 100%);pointer-events:none}
+#page .edv-panel-head{display:flex;align-items:start;justify-content:space-between;gap:12px;margin-bottom:22px;min-width:0}
+#page .edv-panel-title{display:flex;align-items:start;gap:11px;min-width:0}
+#page .edv-panel-icon{width:41px;height:41px;flex:0 0 41px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(140deg,#e6fbf4,#d9f7ed);border:1px solid #cff0e3;color:#0a958c}
+#page .edv-panel-icon svg{width:21px;height:21px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+#page .edv-panel-title h4{font-size:clamp(14px,1.3vw,17px);font-weight:800;letter-spacing:-.55px;color:#193d42;line-height:1.34;margin:0 0 4px}
+#page .edv-panel-title p{font-size:10px;line-height:1.6;color:#85a29a;margin:0}
+#page .edv-panel-tag{font-size:9px;font-weight:800;color:#098c81;background:#edfdf6;border:1px solid #d8f4e9;padding:8px 10px;border-radius:999px;white-space:nowrap}
+#page .edv-weekly{min-height:390px;display:flex;flex-direction:column}
+#page .edv-weekly .edv-chart-area{position:relative;margin-top:2px;flex:1;min-height:220px;border-radius:17px;background:repeating-linear-gradient(to top,transparent 0px,transparent 52px,#e9f2ee 53px,#e9f2ee 54px);overflow:hidden}
+#page .edv-bars{height:220px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:clamp(5px,1.25vw,18px);padding:9px 9px 0}
+#page .edv-day{height:100%;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px}
+#page .edv-day-plot{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px;width:100%;flex:1;min-height:0}
+#page .edv-bar-value{display:inline-grid;place-items:center;min-width:25px;min-height:21px;border-radius:7px;background:#f0fcf7;color:#15877e;font-size:10px;font-weight:800;font-variant-numeric:tabular-nums}
+#page .edv-bar{display:block;flex:0 0 auto;width:min(36px,69%);min-height:6px;border-radius:10px 10px 5px 5px;background:linear-gradient(180deg,#5bdfc6,#0a9b94);box-shadow:inset 0 1px #ffffff88,0 5px 12px #0aa78a24;transition:height .35s ease,filter .2s ease}
+#page .edv-bar.is-zero{background:linear-gradient(180deg,#d1eee6,#b8e4d7);box-shadow:none;opacity:.85}
+#page .edv-day:hover .edv-bar{filter:saturate(1.3) brightness(1.02)}
+#page .edv-day-label{display:block;color:#75968e;font-size:10px;font-weight:750;white-space:nowrap;padding-bottom:6px;text-align:center}
+#page .edv-week-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid #e7f0eb;padding-top:17px;margin-top:17px;flex-wrap:wrap}
+#page .edv-week-note{display:flex;align-items:center;gap:9px;min-width:0;color:#73968d;font-size:10px;line-height:1.6}
+#page .edv-week-note .edv-note-dot{height:8px;width:8px;flex:0 0 8px;background:#19bda7;border-radius:50%;box-shadow:0 0 0 4px #e2f9f0}
+#page .edv-week-foot strong{color:#17494a;font-size:10px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+#page .edv-distribution{min-height:390px}
+#page .edv-dist-main{display:grid;grid-template-columns:minmax(115px,142px) minmax(0,1fr);gap:clamp(14px,1.8vw,23px);align-items:center;margin:8px 0 19px}
+#page .edv-donut{width:100%;max-width:142px;aspect-ratio:1;position:relative;padding:13px;border-radius:50%;background:var(--edv-donut-bg,conic-gradient(#dcefe8 0 100%));box-shadow:0 11px 27px #128f7c1b,inset 0 0 0 1px #ffffff80}
+#page .edv-donut:before{content:"";position:absolute;inset:13px;background:#ffffff;border-radius:50%;box-shadow:inset 0 2px 9px #0a77660b}
+#page .edv-donut-inner{position:relative;z-index:1;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;text-align:center}
+#page .edv-donut-inner strong{font-size:clamp(25px,2.5vw,36px);line-height:1;font-weight:800;letter-spacing:-1.3px;color:#193f43;font-variant-numeric:tabular-nums}
+#page .edv-donut-inner span{font-size:9px;font-weight:800;color:#86a098;line-height:1.3}
+#page .edv-dist-list{display:grid;gap:11px;min-width:0}
+#page .edv-dist-row{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;font-size:10px;font-weight:750;color:#607c76}
+#page .edv-dist-label{display:flex;align-items:center;gap:8px;min-width:0}
+#page .edv-dist-label i{display:block;width:8px;height:8px;border-radius:3px;background:var(--edv-color);flex:0 0 8px}
+#page .edv-dist-row b{font-size:11px;color:#294a49;font-weight:800;font-variant-numeric:tabular-nums}
+#page .edv-dist-footer{background:linear-gradient(125deg,#ecfbf6,#f8fffc);border:1px solid #d9f1e7;border-radius:15px;display:flex;justify-content:space-between;align-items:center;gap:9px;padding:13px 14px;min-width:0}
+#page .edv-dist-footer span{font-size:10px;font-weight:750;color:#5c8b80;line-height:1.5}
+#page .edv-dist-footer strong{white-space:nowrap;background:#fff;border:1px solid #d7efe4;color:#087f79;border-radius:9px;padding:7px 10px;font-size:10px;font-weight:800}
+#page .edv-deadlines,#page .edv-activity{min-height:288px}
+#page .edv-plain-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;min-height:34px;padding:8px 11px;border-radius:11px;border:1px solid #d6ece4;background:#f9fffc;color:#098c80;font-size:10px;font-weight:800;transition:background .17s,border-color .17s}
+#page .edv-plain-btn:hover{background:#eafbf4;border-color:#9ee6d0}
+#page .edv-deadline-list,#page .edv-activity-list{display:flex;flex-direction:column;gap:10px;min-width:0}
+#page .edv-deadline{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:13px;align-items:center;padding:12px 13px;border:1px solid #e3f0ea;border-radius:15px;background:linear-gradient(140deg,#fff,#fafffc);min-width:0;transition:border-color .18s,background .18s}
+#page .edv-deadline:hover{border-color:#a4e6d2;background:#f4fffa}
+#page .edv-deadline-index{width:43px;height:43px;border:1px solid #d4f1e5;border-radius:13px;background:linear-gradient(145deg,#e9fff6,#dff8ee);display:grid;place-items:center;color:#0a9284;font-size:13px;font-weight:800;font-variant-numeric:tabular-nums}
+#page .edv-deadline-body{min-width:0}
+#page .edv-deadline-title{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;color:#244547;font-size:11px;line-height:1.5;font-weight:800;margin:0 0 5px}
+#page .edv-deadline-meta{display:flex;align-items:center;flex-wrap:wrap;gap:7px;color:#849d95;font-size:9px;font-weight:650;line-height:1.5}
+#page .edv-deadline-meta span+span:before{content:"·";margin-right:7px;color:#b8cbc4}
+#page .edv-deadline-actions{display:flex;align-items:center;justify-content:end;gap:8px;flex-wrap:wrap}
+#page .edv-deadline-actions .badge{max-width:120px;text-overflow:ellipsis;overflow:hidden}
+#page .edv-deadline-actions .edv-plain-btn{min-height:32px}
+#page .edv-activity-row{display:grid;grid-template-columns:35px minmax(0,1fr) auto;gap:12px;align-items:start;min-width:0;padding:9px 0 13px;border-bottom:1px solid #eaf1ed}
+#page .edv-activity-row:last-child{border-bottom:0}
+#page .edv-activity-dot{height:34px;width:34px;display:grid;place-items:center;background:#e8faf4;border:1px solid #d4f0e5;border-radius:11px;color:#0a9c8e}
+#page .edv-activity-dot svg{height:17px;width:17px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+#page .edv-activity-info{min-width:0}.edv-activity-info strong{display:block;font-size:11px;font-weight:800;color:#29474a;margin:1px 0 4px;overflow-wrap:anywhere}
+#page .edv-activity-info p{font-size:10px;color:#819e95;line-height:1.65;max-width:100%;overflow-wrap:anywhere;margin:0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+#page .edv-activity-date{font-size:9px;font-weight:750;color:#7f9d95;white-space:nowrap;padding-top:3px}
+#page .edv-empty-mini{min-height:185px;border:1px dashed #c7e9df;background:radial-gradient(circle at 35% 12%,#e7fbf3,#fff 65%);border-radius:17px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px 18px;gap:9px}
+#page .edv-empty-mini .edv-empty-icon{display:grid;place-items:center;height:47px;width:47px;border-radius:16px;background:#e7fff6;border:1px solid #bdebdc;color:#079c8d;font-size:23px}
+#page .edv-empty-mini strong{font-size:13px;color:#23484b;font-weight:800}
+#page .edv-empty-mini p{font-size:10px;color:#85a199;line-height:1.7;max-width:290px;margin:0}
+@media(max-width:1200px){#page .edv-insights{grid-template-columns:minmax(0,1.12fr) minmax(0,1fr)}#page .edv-insight{padding:20px}#page .edv-dist-main{grid-template-columns:115px minmax(0,1fr);gap:13px}}
+@media(max-width:1060px){#page .edv-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#page .edv-insights{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#page .edv-dist-main{grid-template-columns:1fr;justify-items:center}#page .edv-dist-list{width:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}#page .edv-distribution{min-height:390px}}
+@media(max-width:800px){#page .edv-insights{grid-template-columns:1fr}#page .edv-weekly,#page .edv-distribution,#page .edv-deadlines,#page .edv-activity{min-height:0}#page .edv-dist-main{grid-template-columns:142px minmax(0,1fr);justify-items:stretch}#page .edv-dist-list{grid-template-columns:1fr}}
+@media(max-width:520px){#page .edv-kpis{gap:10px;margin:14px 0 0}#page .edv-kpi{min-height:138px;padding:16px 13px;border-radius:17px}#page .edv-kpi-label{font-size:8px;letter-spacing:.3px;max-width:calc(100% - 32px)}#page .edv-kpi-icon{height:32px;flex-basis:32px;border-radius:10px}#page .edv-kpi-icon svg{width:17px;height:17px}#page .edv-kpi-value{font-size:29px;margin:15px 0 7px}#page .edv-kpi-foot{font-size:8px}#page .edv-kpi-foot i{flex-basis:12px}#page .edv-intro{margin:23px 0 14px}#page .edv-intro h3{font-size:22px}#page .edv-insights{gap:12px}#page .edv-insight{padding:17px;border-radius:19px}#page .edv-panel-head{gap:9px;margin-bottom:15px}#page .edv-panel-title{gap:9px}#page .edv-panel-icon{width:35px;height:35px;flex-basis:35px;border-radius:11px}#page .edv-panel-title h4{font-size:14px}#page .edv-panel-title p{font-size:9px}#page .edv-panel-tag{font-size:8px;padding:7px 8px}#page .edv-bars{height:190px;gap:4px;padding-inline:1px}#page .edv-weekly .edv-chart-area{min-height:190px}#page .edv-day-label{font-size:9px}#page .edv-bar-value{font-size:9px;min-width:20px}#page .edv-dist-main{grid-template-columns:112px minmax(0,1fr);gap:12px}#page .edv-donut{padding:10px}#page .edv-donut:before{inset:10px}#page .edv-donut-inner strong{font-size:26px}#page .edv-dist-list{gap:10px}#page .edv-dist-row{font-size:9px}#page .edv-deadline{grid-template-columns:35px minmax(0,1fr);gap:9px;padding:10px}#page .edv-deadline-index{height:35px;width:35px;border-radius:11px}#page .edv-deadline-actions{grid-column:2;justify-content:start}#page .edv-activity-row{grid-template-columns:31px minmax(0,1fr);gap:9px}#page .edv-activity-dot{height:31px;width:31px}#page .edv-activity-date{grid-column:2;padding:0}}
+@media(max-width:350px){#page .edv-kpis{grid-template-columns:1fr 1fr}#page .edv-kpi-value{font-size:25px}#page .edv-kpi{padding:14px 11px}#page .edv-dist-main{grid-template-columns:1fr;justify-items:center}#page .edv-dist-list{width:100%;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){#page .edv-kpi,#page .edv-insight,#page .edv-bar{transition:none}#page .edv-kpi:hover{transform:none}}
+
 </style></head>
-<body><div class="app"><aside class="sidebar" id="sidebar"><a href="main.html" class="brand" aria-label="Beranda EduTask"><span class="mark">✧</span><span class="brand-text">EduTask<span>SMART WORKSPACE</span></span></a><div class="workspace-card"><div class="workspace-icon">◈</div><div><b id="workspaceTitle">EduTask Workspace</b><small id="workspaceRole">Internal operations</small></div></div><nav class="menu-scroll" id="navigation" aria-label="Menu aplikasi"></nav><div class="profile-card"><div class="avatar" id="sideAvatar">ED</div><div class="who"><b id="sideName">Memuat…</b><span id="sideRole">Workspace member</span></div><button class="logout" data-action="logout" title="Keluar" aria-label="Keluar">↪</button></div></aside><div class="mobile-shade" id="shade"></div>
-<div class="main"><header class="topbar"><div style="display:flex;gap:12px;align-items:center"><button class="icon-btn mobile-menu" id="mobileMenu" aria-label="Buka menu">☰</button><div><div class="crumb">EduTask / <span id="crumb">Overview</span></div><h2 id="topTitle">Workspace</h2><span id="workspaceSync" class="ed-workspace-sync" data-mode="loading">Memuat ringkasan…</span></div></div><div class="top-actions"><span class="ed-date-chip hide-mobile"><span aria-hidden="true">▦</span><span id="todayText"></span></span><button class="btn primary ed-global-refresh" data-action="refresh" title="Ambil data terbaru dari server" aria-label="Segarkan data"><span class="ed-refresh-icon" aria-hidden="true">↻</span><span class="hide-mobile">Segarkan Data</span></button><button class="icon-btn ed-notif-btn" data-route="notifications" aria-label="Buka notifikasi" title="Notifikasi">♢<i class="notification-dot" id="notiDot" style="display:none"></i></button><button class="ed-profile-chip" data-route="profile" aria-label="Buka profil saya"><span class="mini-person" id="topAvatar">ED</span><span class="ed-profile-copy hide-mobile"><strong id="topName">Akun EduTask</strong><small id="topRole">Workspace</small></span><span class="hide-mobile">⌄</span></button></div></header>
-<main class="content" id="page"><div class="loading-screen"><div class="loading-shell"><div class="loader"></div><h3>Menyusun workspace Anda…</h3><p>Mengecek sesi dan mengambil ringkasan tugas terbaru.<br>Anda tetap dapat mengedit kode EduTask dari VS Code.</p><div class="loading-track"></div></div></div></main></div></div>
+<body class="ed-auth-booting"><div class="app"><aside class="sidebar" id="sidebar"><a href="main.html" class="brand" aria-label="Beranda EduTask"><span class="mark">✧</span><span class="brand-text">EduTask<span>SMART WORKSPACE</span></span></a><div class="workspace-card"><div class="workspace-icon">◈</div><div><b id="workspaceTitle">EduTask Workspace</b><small id="workspaceRole">Internal operations</small></div></div><nav class="menu-scroll" id="navigation" aria-label="Menu aplikasi"><div class="ed-boot-nav" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div></nav><div class="profile-card"><div class="avatar" id="sideAvatar">ED</div><div class="who"><b id="sideName">Memuat…</b><span id="sideRole">Workspace member</span></div><button class="logout" data-action="logout" title="Keluar" aria-label="Keluar">↪</button></div></aside><div class="mobile-shade" id="shade"></div>
+<div class="main"><header class="topbar"><div style="display:flex;gap:12px;align-items:center"><button class="icon-btn mobile-menu" id="mobileMenu" aria-label="Buka menu">☰</button><div><div class="crumb">EduTask / <span id="crumb">Overview</span></div><h2 id="topTitle">Workspace</h2><span id="workspaceSync" class="ed-workspace-sync" data-mode="loading">Memuat ringkasan…</span></div></div><div class="top-actions"><span class="ed-date-chip hide-mobile"><span aria-hidden="true">▦</span><span id="todayText"></span></span><button class="btn primary ed-global-refresh" data-action="refresh" title="Ambil data terbaru dari server" aria-label="Segarkan data"><span class="ed-refresh-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 4v5h5M4 13a8.1 8.1 0 0 0 15.5 2M20 20v-5h-5"/></svg></span><span class="hide-mobile">Segarkan Data</span></button><button class="icon-btn ed-notif-btn" data-route="notifications" aria-label="Buka notifikasi" title="Notifikasi">♢<i class="notification-dot" id="notiDot" style="display:none"></i></button><button class="ed-profile-chip" data-route="profile" aria-label="Buka profil saya"><span class="mini-person" id="topAvatar">ED</span><span class="ed-profile-copy hide-mobile"><strong id="topName">Akun EduTask</strong><small id="topRole">Workspace</small></span><span class="hide-mobile">⌄</span></button></div></header>
+<main class="content" id="page"><div class="ed-initial-boot" role="status" aria-label="Menyiapkan dashboard EduTask" aria-busy="true">
+ <section class="ed-boot-hero"><div class="ed-boot-copy">
+ <span class="ed-boot-eyebrow"><i class="ed-boot-signal" aria-hidden="true"></i> EDUTASK · SMART WORKSPACE</span>
+ <div class="ed-boot-identity"><span aria-hidden="true">✧</span><div>WORKSPACE INTELLIGENCE</div></div>
+ <h1>Semua tugas. Satu pusat kendali.</h1>
+ <p class="ed-boot-description">Menyiapkan tugas, progres internship, dan aktivitas tim dalam satu ruang kerja yang terhubung.</p>
+ <div class="ed-boot-progress"><i class="ed-boot-ring" aria-hidden="true"></i><span>Menyinkronkan data secara aman</span><span class="ed-boot-dots" aria-hidden="true">···</span></div>
+ </div><aside class="ed-boot-hero-glass" aria-label="Memuat ringkasan performa">
+ <span class="ed-boot-light"></span><span class="ed-boot-light line-strong"></span><div class="ed-boot-glass-divider"></div><span class="ed-boot-light wide"></span><div class="ed-boot-glass-row"><span class="ed-boot-light short"></span><span class="ed-boot-light short"></span></div>
+ </aside></section>
+ <div class="ed-boot-kpis" aria-label="Menyiapkan kartu statistik">
+ <div class="ed-boot-kpi"><span class="ed-boot-kpi-symbol"><i class="ed-boot-bar icon"></i></span><span class="ed-boot-bar sm"></span><span class="ed-boot-bar lg"></span><span class="ed-boot-bar md"></span></div>
+ <div class="ed-boot-kpi"><span class="ed-boot-kpi-symbol"><i class="ed-boot-bar icon"></i></span><span class="ed-boot-bar sm"></span><span class="ed-boot-bar lg"></span><span class="ed-boot-bar md"></span></div>
+ <div class="ed-boot-kpi"><span class="ed-boot-kpi-symbol"><i class="ed-boot-bar icon"></i></span><span class="ed-boot-bar sm"></span><span class="ed-boot-bar lg"></span><span class="ed-boot-bar md"></span></div>
+ <div class="ed-boot-kpi"><span class="ed-boot-kpi-symbol"><i class="ed-boot-bar icon"></i></span><span class="ed-boot-bar sm"></span><span class="ed-boot-bar lg"></span><span class="ed-boot-bar md"></span></div>
+ </div>
+ <div class="ed-boot-body-grid" aria-label="Menyiapkan analitik dan aktivitas">
+ <section class="ed-boot-pane"><div class="ed-boot-pane-top"><div class="ed-boot-pane-header"><span class="ed-boot-bar md"></span><span class="ed-boot-bar sm"></span></div><span class="ed-boot-pill"></span></div><div class="ed-boot-chart"><i style="height:36%"></i><i style="height:58%"></i><i style="height:47%"></i><i style="height:77%"></i><i style="height:53%"></i><i style="height:82%"></i><i style="height:64%"></i></div></section>
+ <section class="ed-boot-pane"><div class="ed-boot-pane-top"><div class="ed-boot-pane-header"><span class="ed-boot-bar md"></span><span class="ed-boot-bar sm"></span></div><span class="ed-boot-pill"></span></div>
+ <div class="ed-boot-feed"><div class="ed-boot-feed-row"><i class="ed-boot-dot"></i><div class="ed-boot-feed-copy"><span class="ed-boot-bar md"></span><span class="ed-boot-bar sm"></span></div><span class="ed-boot-bar ed-boot-feed-end"></span></div><div class="ed-boot-feed-row"><i class="ed-boot-dot"></i><div class="ed-boot-feed-copy"><span class="ed-boot-bar md"></span><span class="ed-boot-bar sm"></span></div><span class="ed-boot-bar ed-boot-feed-end"></span></div><div class="ed-boot-feed-row"><i class="ed-boot-dot"></i><div class="ed-boot-feed-copy"><span class="ed-boot-bar md"></span><span class="ed-boot-bar sm"></span></div><span class="ed-boot-bar ed-boot-feed-end"></span></div><div class="ed-boot-feed-row"><i class="ed-boot-dot"></i><div class="ed-boot-feed-copy"><span class="ed-boot-bar md"></span><span class="ed-boot-bar sm"></span></div><span class="ed-boot-bar ed-boot-feed-end"></span></div></div></section>
+ </div></div></main></div></div>
 <div class="modal-overlay" id="overlay" aria-hidden="true"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-head"><div><span class="hint" id="modalLabel">EDUTASK WORKSPACE</span><h2 id="modalTitle">Detail</h2><p id="modalDesc">Kelola data Anda dengan aman.</p></div><button class="close" id="modalClose" aria-label="Tutup dialog">×</button></div><div class="modal-body" id="modalBody"></div></div></div><div id="toasts" class="toast-area" aria-live="polite"></div>
 <div id="edLogoutOverlay" class="ed-logout-overlay" aria-live="polite" aria-hidden="true"><div class="ed-logout-card" role="status"><span class="ed-logout-logo" aria-hidden="true">✧</span><h2>Mengamankan sesi Anda</h2><p>Sedang keluar dari EduTask dengan aman. Perubahan yang sudah tersimpan tetap terjaga.</p><div class="ed-logout-progress" aria-hidden="true"></div></div></div>
 <script src="config.js"></script>
@@ -434,6 +701,51 @@ const nice=s=>String(s||'').replace(/([a-z])([A-Z])/g,'$1 $2').replace(/\b\w/g,c
 const date=s=>{if(!s)return '—';const v=new Date(s.length===10?s+'T12:00:00':s);return Number.isNaN(v.getTime())?s:v.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});};
 const num=n=>Number(n||0).toLocaleString('id-ID');
 const initials=s=>String(s||'ED').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+
+const avatarSafeSource=url=>{
+ const s=String(url||'');
+ return /^data:image\/jpeg;base64,[a-zA-Z0-9+/=]{100,18000}$/.test(s)||/^https:\/\/[^\s<>"']{1,1950}$/i.test(s)?s:'';
+};
+function setProfileAvatar(el,user){
+ if(!el||!user)return;
+ const url=avatarSafeSource(user.avatarUrl);
+ el.replaceChildren();
+ if(url){const image=document.createElement('img');image.src=url;image.alt='Foto profil';image.decoding='async';el.append(image);}
+ else el.textContent=initials(user.fullName);
+}
+// Compress before transfer to GAS. A single Sheets cell is limited; photos are
+// deliberately stored as small JPEG avatars, not original full-size images.
+async function compressProfilePhoto(file){
+ if(!file||!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('Pilih foto JPG, PNG atau WebP.');
+ if(file.size>4*1024*1024)throw Error('Ukuran foto maksimal 4 MB.');
+ const objectURL=URL.createObjectURL(file);
+ try{
+  const image=await new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('Foto tidak dapat dibaca.'));img.src=objectURL;});
+  const smallest=Math.min(image.naturalWidth,image.naturalHeight);
+  if(smallest<40)throw Error('Resolusi foto terlalu kecil.');
+  for(const size of [160,144,128,112,96]){
+   const canvas=document.createElement('canvas');canvas.width=canvas.height=size;
+   const c=canvas.getContext('2d',{alpha:false});
+   c.fillStyle='#ffffff';c.fillRect(0,0,size,size);
+   const crop=Math.min(image.naturalWidth,image.naturalHeight),sx=(image.naturalWidth-crop)/2,sy=(image.naturalHeight-crop)/2;
+   c.drawImage(image,sx,sy,crop,crop,0,0,size,size);
+   for(const quality of [.82,.68,.55,.42]){
+    const data=canvas.toDataURL('image/jpeg',quality);
+    if(data.length<=14000)return data;
+   }
+  }
+  throw Error('Foto terlalu kompleks untuk disimpan. Pilih foto lain.');
+ }finally{URL.revokeObjectURL(objectURL);}
+}
+let stagedAvatarData;
+function avatarPreview(data){
+ const host=$('#profilePhotoPreview');if(!host)return;
+ host.replaceChildren();
+ const src=avatarSafeSource(data);
+ if(src){const img=document.createElement('img');img.src=src;img.alt='Pratinjau foto profil';host.append(img);}
+ else host.textContent=initials(state.user?.fullName);
+}
+
 const fmt=s=>String(s||'').slice(0,10);
 const icon={overview:'◈',tasks:'☷',calendar:'▦',daily:'▤',progress:'◴',feedback:'↻',projects:'⬡',development:'✦',notifications:'♢',announcements:'◉',performance:'◧',profile:'◍',interns:'♙',mentors:'♧',teams:'♧',monitoring:'◎',reviews:'✓',analytics:'▥',batches:'▣',evaluations:'★',reports:'↧',audit:'⌁',templates:'▧',settings:'⚙',programs:'▥',criteria:'☰',milestones:'◇',members:'♧',mentorships:'♙',smart:'✦',recurring:'↻',dependencies:'◇',deadlines:'◷',sprints:'▦',sessions:'♧',roadmap:'⌁',competencies:'◈',coaching:'✧'};
 const NAV_INTERN=[['WORKSPACE',['overview','tasks','calendar','daily','dependencies','deadlines','sprints']],['GROWTH & COLLABORATION',['progress','feedback','projects','development','sessions','roadmap','competencies','coaching']],['YOUR ACCOUNT',['notifications','announcements','performance','profile']]];
@@ -458,6 +770,7 @@ const FIELDS={
 };
 const state={user:null,role:'intern',route:'overview',dashboard:null,items:[],cache:new Map(),userMap:new Map(),refs:{programs:new Map(),batches:new Map(),teams:new Map(),projects:new Map()},directory:null,search:'',status:'',programFilter:'',batchFilter:'',sort:'newest',view:'table',page:1,calDate:new Date(),calView:'month',loading:false,detail:null,lastSync:0,authReady:false,snapshotStale:false,referenceTime:0};
 let routeSequence=0, lastSummaryRefresh=0, scheduledSummary=null;
+let routePending=null; // content of another route must not leak into loading UI
 const routeBackgroundJobs=new Map();
 let referenceInFlight=null, initInFlight=null;
 const REFERENCE_TYPES={'ref:InternshipPrograms':'programs','ref:Batches':'batches','ref:Teams':'teams','ref:Projects':'projects'};
@@ -470,12 +783,33 @@ function updateSyncStatus(){
 }
 function cacheSafeDashboard(){if(state.dashboard && state.authReady)E.scoped.put(state.dashboard);}
 
-function premiumSkeleton(route='overview'){
+function premiumSkeleton(route='overview',bodyOnly=false){
  const cards=Array.from({length:4},()=>`<div class="ed-skel ed-skel-stat"><span class="skel-line s"></span><span class="skel-line xl"></span><span class="skel-line m"></span></div>`).join('');
  const rows=Array.from({length:4},()=>`<div class="ed-skel-row"><i class="ed-skel-dot"></i><span class="skel-line m" style="margin:0;flex:1"></span><span class="skel-line s" style="margin:0"></span></div>`).join('');
- return `<div class="ed-skeleton-wrap" role="status" aria-label="Memuat modul ${esc(title(route))}"><div class="ed-skel ed-skel-hero"><span class="skel-line s"></span><span class="skel-line xl"></span><span class="skel-line m"></span></div><div class="ed-skel-stats">${cards}</div><div class="ed-skel ed-skel-detail"><span class="skel-line m"></span>${rows}</div></div>`;
+ return `<div class="ed-skeleton-wrap" role="status" aria-label="Memuat modul ${esc(title(route))}">${bodyOnly?'':'<div class="ed-skel ed-skel-hero"><span class="skel-line s"></span><span class="skel-line xl"></span><span class="skel-line m"></span></div>'}<div class="ed-skel-stats">${cards}</div><div class="ed-skel ed-skel-detail"><span class="skel-line m"></span>${rows}</div></div>`;
 }
 const formSkeleton=()=>`<div class="ed-skel ed-skel-form"><span class="skel-line"></span><span class="skel-line"></span><span class="skel-line"></span><span class="skel-line"></span></div>`;
+
+// First-paint skeleton matches the dashboard's *actual* structure (Finora pattern).
+// It is present in HTML before JS starts; this function is used only if a
+// non-cached dashboard must be opened after a route change or session restore.
+const initialBootMarkup = '<div class="ed-initial-boot" role="status" aria-label="Menyiapkan dashboard EduTask" aria-busy="true">\n <section class="ed-boot-hero"><div class="ed-boot-copy">\n <span class="ed-boot-eyebrow"><i class="ed-boot-signal" aria-hidden="true"></i> EDUTASK · SMART WORKSPACE</span>\n <div class="ed-boot-identity"><span aria-hidden="true">✧</span><div>WORKSPACE INTELLIGENCE</div></div>\n <h1>Semua tugas. Satu pusat kendali.</h1>\n <p class="ed-boot-description">Menyiapkan tugas, progres internship, dan aktivitas tim dalam satu ruang kerja yang terhubung.</p>\n <div class="ed-boot-progress"><i class="ed-boot-ring" aria-hidden="true"></i><span>Menyinkronkan data secara aman</span><span class="ed-boot-dots" aria-hidden="true">···</span></div>\n </div><aside class="ed-boot-hero-glass" aria-label="Memuat ringkasan performa">\n <span class="ed-boot-light"></span><span class="ed-boot-light line-strong"></span><div class="ed-boot-glass-divider"></div><span class="ed-boot-light wide"></span><div class="ed-boot-glass-row"><span class="ed-boot-light short"></span><span class="ed-boot-light short"></span></div>\n </aside></section>\n <div class="ed-boot-kpis" aria-label="Menyiapkan kartu statistik">\n <div class="ed-boot-kpi"><span class="ed-boot-kpi-symbol"><i class="ed-boot-bar icon"></i></span><span class="ed-boot-bar sm"></span><span class="ed-boot-bar lg"></span><span class="ed-boot-bar md"></span></div>\n <div class="ed-boot-kpi"><span class="ed-boot-kpi-symbol"><i class="ed-boot-bar icon"></i></span><span class="ed-boot-bar sm"></span><span class="ed-boot-bar lg"></span><span class="ed-boot-bar md"></span></div>\n <div class="ed-boot-kpi"><span class="ed-boot-kpi-symbol"><i class="ed-boot-bar icon"></i></span><span class="ed-boot-bar sm"></span><span class="ed-boot-bar lg"></span><span class="ed-boot-bar md"></span></div>\n <div class="ed-boot-kpi"><span class="ed-boot-kpi-symbol"><i class="ed-boot-bar icon"></i></span><span class="ed-boot-bar sm"></span><span class="ed-boot-bar lg"></span><span class="ed-boot-bar md"></span></div>\n </div>\n <div class="ed-boot-body-grid" aria-label="Menyiapkan analitik dan aktivitas">\n <section class="ed-boot-pane"><div class="ed-boot-pane-top"><div class="ed-boot-pane-header"><span class="ed-boot-bar md"></span><span class="ed-boot-bar sm"></span></div><span class="ed-boot-pill"></span></div><div class="ed-boot-chart"><i style="height:36%"></i><i style="height:58%"></i><i style="height:47%"></i><i style="height:77%"></i><i style="height:53%"></i><i style="height:82%"></i><i style="height:64%"></i></div></section>\n <section class="ed-boot-pane"><div class="ed-boot-pane-top"><div class="ed-boot-pane-header"><span class="ed-boot-bar md"></span><span class="ed-boot-bar sm"></span></div><span class="ed-boot-pill"></span></div>\n <div class="ed-boot-feed"><div class="ed-boot-feed-row"><i class="ed-boot-dot"></i><div class="ed-boot-feed-copy"><span class="ed-boot-bar md"></span><span class="ed-boot-bar sm"></span></div><span class="ed-boot-bar ed-boot-feed-end"></span></div><div class="ed-boot-feed-row"><i class="ed-boot-dot"></i><div class="ed-boot-feed-copy"><span class="ed-boot-bar md"></span><span class="ed-boot-bar sm"></span></div><span class="ed-boot-bar ed-boot-feed-end"></span></div><div class="ed-boot-feed-row"><i class="ed-boot-dot"></i><div class="ed-boot-feed-copy"><span class="ed-boot-bar md"></span><span class="ed-boot-bar sm"></span></div><span class="ed-boot-bar ed-boot-feed-end"></span></div><div class="ed-boot-feed-row"><i class="ed-boot-dot"></i><div class="ed-boot-feed-copy"><span class="ed-boot-bar md"></span><span class="ed-boot-bar sm"></span></div><span class="ed-boot-bar ed-boot-feed-end"></span></div></div></section>\n </div></div>';
+let firstDashboardReveal = true;
+function showInitialBoot(){
+ const page=$('#page');
+ if(page && !page.querySelector('.ed-initial-boot'))page.innerHTML=initialBootMarkup;
+ $('#crumb').textContent='Overview';$('#topTitle').textContent='Workspace Overview';
+ $('#todayText').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'});
+ updateSyncStatus();
+}
+function revealInitialDashboard(){
+ if(!firstDashboardReveal)return;
+ firstDashboardReveal=false;
+ const page=$('#page');if(!page)return;
+ page.classList.add('ed-boot-reveal');
+ setTimeout(()=>page.classList.remove('ed-boot-reveal'),420);
+}
+
 
 // Directory data is server-authorized; never construct labels from opaque IDs.
 const REF_KEY={programId:'programs',batchId:'batches',teamId:'teams',projectId:'projects'};
@@ -550,7 +884,7 @@ function showModal(heading,body,label='EDUTASK WORKSPACE',desc='Kelola informasi
 function closeModal(){$('#overlay').classList.remove('show');$('#overlay').setAttribute('aria-hidden','true');$('#modalBody').innerHTML='';state.detail=null;if(livePending)setTimeout(()=>remoteDataChanged('after-modal'),80);}
 function side(open){$('#sidebar').classList.toggle('open',open);$('#shade').classList.toggle('show',open);}
 function nav(){const menus=isStaff()?NAV_STAFF:NAV_INTERN;$('#navigation').innerHTML=menus.map(([group,items])=>`<div class="menu-group">${esc(group)}</div>`+items.filter(route=>isAdmin()||!['settings','programs','criteria','members','mentorships','mentors','audit'].includes(route)).map(route=>`<button class="nav-item ${state.route===route?'active':''}" data-route="${route}"><span class="nav-icon">${icon[route]||'◈'}</span><span>${esc(title(route))}</span>${route==='notifications'&&state.dashboard?.notifications?.some(n=>n.isRead!=='true')?'<i class="indicator"></i>':''}</button>`).join('')).join('');
-$('#workspaceTitle').textContent=isStaff()?'Mentor Command Center':'Intern Workspace';$('#workspaceRole').textContent=state.role==='admin'?'Admin & Organization':state.role==='mentor'?'Mentor & Supervisor':'Intern Operations';$('#sideName').textContent=state.user.fullName;$('#sideRole').textContent=nice(state.role);$('#sideAvatar').textContent=initials(state.user.fullName);$('#topAvatar').textContent=initials(state.user.fullName);$('#notiDot').style.display=state.dashboard?.notifications?.some(n=>n.isRead!=='true')?'block':'none';$('#topName').textContent=state.user.fullName;$('#topRole').textContent=state.role==='admin'?'Super Admin':state.role==='mentor'?'Mentor':'Intern';}
+$('#workspaceTitle').textContent=isStaff()?'Mentor Command Center':'Intern Workspace';$('#workspaceRole').textContent=state.role==='admin'?'Admin & Organization':state.role==='mentor'?'Mentor & Supervisor':'Intern Operations';$('#sideName').textContent=state.user.fullName;$('#sideRole').textContent=nice(state.role);setProfileAvatar($('#sideAvatar'),state.user);setProfileAvatar($('#topAvatar'),state.user);$('#notiDot').style.display=state.dashboard?.notifications?.some(n=>n.isRead!=='true')?'block':'none';$('#topName').textContent=state.user.fullName;$('#topRole').textContent=state.role==='admin'?'Super Admin':state.role==='mentor'?'Mentor':'Intern';}
 const descRoute=route=>({overview:'Ringkasan pekerjaan, prioritas, dan aktivitas terbaru.',tasks:'Kerjakan, kelola, dan pantau penugasan dalam satu ruang kerja.',monitoring:'Pantau beban kerja dan status seluruh peserta yang Anda kelola.',reviews:'Review submission, berikan revisi atau approval.',analytics:'Analisis progres dan performa dengan metrik yang transparan.',daily:'Dokumentasikan pekerjaan harian dan perkembangan.',calendar:'Pantau jadwal dan tenggat aktivitas.',reports:'Ekspor data aktual sesuai kewenangan akun Anda.'}[route]||`Kelola ${title(route).toLowerCase()} yang terhubung dengan database.`);
 const FEATURE_COPY={
  tasks:['TASK STUDIO','Every task, clearly in motion.','Prioritas, progres, dan hasil kerja dalam satu tempat.','#043b47','#0cbaaa','TUGAS AKTIF'],
@@ -672,7 +1006,7 @@ Object.assign(V7_ROUTE_STORY,{
 function heading(extra='',skeletonMode=false){
  const [tag,headline,description,a,b]=FEATURE_COPY[state.route]||['EDUTASK WORKSPACE',title(state.route),descRoute(state.route),'#074750','#1cb5a4'];
  const route=state.route,metric=!v7IsReady(route)?{value:'—',label:'DATA WORKSPACE',sub:'Menyiapkan informasi terbaru'}:localMetric(route);
- const val=typeof metric.value==='number'&&metric.value<10?String(metric.value).padStart(2,'0'):String(metric.value);
+ const val=typeof metric.value==='number'?num(metric.value):String(metric.value);
  const [storyTag,,storySub]=V7_ROUTE_STORY[route]||[tag,headline,description];
  return `<section class="feature-hero v7-feature-hero" style="--hero-a:${a};--hero-b:${b}" aria-labelledby="v7FeatureTitle">
  <span class="v7-hero-orbit v7-orbit-one" aria-hidden="true"></span><span class="v7-hero-orbit v7-orbit-two" aria-hidden="true"></span>
@@ -681,7 +1015,7 @@ function heading(extra='',skeletonMode=false){
  <div class="feature-hero-meta"><span>SMARTER TASKS</span><span>BETTER GROWTH</span><span>CONNECTED WORKSPACE</span></div></div>
  <aside class="feature-hero-aside"><div class="v7-aside-top"><span class="feature-overline">${esc(metric.label)}</span><span class="ed-live-pill"><i></i>${state.snapshotStale?'Data tersimpan':'Live workspace'}</span></div>
  <div class="v7-aside-number"><strong class="ed-count" data-value="${esc(val)}">${esc(val)}</strong><div class="v7-aside-caption">${esc(metric.sub)}</div></div><div class="v7-aside-rule"></div>
- <div class="v7-aside-bottom"><small><span class="v7-sync-dot"></span>Sinkron terakhir <b>${esc(currentSync())}</b></small><div class="feature-hero-actions">${extra}<button class="btn ed-hero-refresh" data-action="refresh" title="Ambil data terbaru"><span class="ed-refresh-icon">↻</span> Refresh data</button></div></div></aside></section>${skeletonMode?'':v7AfterHero(route)}`;
+ <div class="v7-aside-bottom"><small><span class="v7-sync-dot"></span>Sinkron terakhir <b>${esc(currentSync())}</b></small><div class="feature-hero-actions">${extra}<button class="btn ed-hero-refresh" data-action="refresh" title="Ambil data terbaru"><span class="ed-refresh-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 4v5h5M4 13a8.1 8.1 0 0 0 15.5 2M20 20v-5h-5"/></svg></span> Refresh data</button></div></div></aside></section>${skeletonMode?'':v7AfterHero(route)}`;
 }
 function empty(titleText='Belum ada data',msg='Data akan muncul ketika tersedia di database.'){
  const route=state.route,table=TABLE[route];
@@ -693,18 +1027,78 @@ function empty(titleText='Belum ada data',msg='Data akan muncul ketika tersedia 
  route==='projects'?'Mulai dengan menambahkan proyek pertama agar progres tim bisa dipantau.':
  route==='notifications'?'Belum ada pesan baru. Semua pemberitahuan penting akan tersimpan di sini.':
  'Data akan ditampilkan dengan struktur yang rapi setelah tersedia di workspace.';
- return `<section class="empty v7-empty-state" role="status"><div class="v7-empty-art" aria-hidden="true"><div class="v7-empty-halo v7-empty-halo-a"></div><div class="v7-empty-halo v7-empty-halo-b"></div><span class="v7-empty-symbol">${esc(V7_ROUTE_MARK[route]||'✧')}</span><i class="v7-empty-spark v7-spark-a">✦</i><i class="v7-empty-spark v7-spark-b">✧</i></div><div class="v7-empty-text"><span class="v7-overline">READY FOR WHAT'S NEXT</span><h3>${esc(titleText)}</h3><p>${esc(msg)}</p><small>${esc(copy)}</small><div class="v7-empty-actions">${action}<button class="btn" data-action="refresh"><span class="ed-refresh-icon">↻</span> Periksa data</button></div></div></section>`;
+ return `<section class="empty v7-empty-state" role="status"><div class="v7-empty-art" aria-hidden="true"><div class="v7-empty-halo v7-empty-halo-a"></div><div class="v7-empty-halo v7-empty-halo-b"></div><span class="v7-empty-symbol">${esc(V7_ROUTE_MARK[route]||'✧')}</span><i class="v7-empty-spark v7-spark-a">✦</i><i class="v7-empty-spark v7-spark-b">✧</i></div><div class="v7-empty-text"><span class="v7-overline">READY FOR WHAT'S NEXT</span><h3>${esc(titleText)}</h3><p>${esc(msg)}</p><small>${esc(copy)}</small><div class="v7-empty-actions">${action}<button class="btn" data-action="refresh"><span class="ed-refresh-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 4v5h5M4 13a8.1 8.1 0 0 0 15.5 2M20 20v-5h-5"/></svg></span> Periksa data</button></div></div></section>`;
 }
 function stat(label,value,sub,ico){return `<article class="card stat v7-stat"><span class="v7-stat-icon stat-icon">${ico}</span><span class="small-label">${esc(label)}</span><strong>${esc(value)}</strong><div class="stat-sub">${esc(sub||'EduTask Operations')}</div><span class="v7-stat-trail" aria-hidden="true">↗</span></article>`;}
-function renderDashboard(){const d=state.dashboard;if(!d){$('#page').innerHTML=heading()+premiumSkeleton('overview');return;}
-const oldNotice=state.snapshotStale?'<div class="ed-stale-note" role="status">◷ Ringkasan tersimpan dari sesi sebelumnya. Data terbaru sedang disinkronkan di latar belakang.</div>':'';
-
-const s=d.stats,staff=isStaff(),heroText=staff?'Semua tugas. Satu pusat kendali.':'Setiap progres adalah pencapaian.',heroSub=staff?'Kelola peserta magang, tinjau hasil pekerjaan, dan pastikan setiap milestone tercapai bersama.':'Jelajahi tugas prioritas, atur progres, dan maksimalkan pembelajaran setiap hari.';
-const line=(d.weekly||[]).map((v,i)=>{const max=Math.max(1,...d.weekly.map(x=>x.count));return `<div class="barcol"><small>${v.count}</small><div class="bar" style="height:${Math.max(5,Math.round(v.count/max*118))}px" title="${v.count} tugas selesai"></div><span>${new Date(v.date+'T12:00:00').toLocaleDateString('id-ID',{weekday:'short'})}</span></div>`}).join('');
-$('#page').innerHTML=oldNotice+`<section class="hero v7-dashboard-hero"><div class="hero-inner"><div class="v7-hero-top"><span class="v7-brand-emblem">✦</span><span class="feature-kicker"><i class="signal"></i>EDUTASK · SMART WORKSPACE</span></div><div class="v7-hero-eyebrow">YOUR WORKSPACE / OVERVIEW</div><h2>${esc(heroText)}</h2><p>Halo, <strong>${esc(state.user.fullName.split(' ')[0])}</strong>! ${esc(heroSub)}</p><div class="feature-hero-meta"><span>SMARTER TASKS</span><span>BETTER GROWTH</span></div><button class="hero-btn" data-route="${staff?'reviews':'tasks'}">${staff?'Lihat pending review':'Jelajahi tugas saya'} <span>→</span></button></div><aside class="v7-overview-aside"><div class="v7-overview-aside-head"><span>WORKSPACE PERFORMANCE</span><span class="ed-live-pill"><i></i>Live</span></div><div class="v7-overview-progress"><div class="v7-overview-ring" style="--progress:${Math.max(0,Math.min(100,Number(s.completionRate)||0))}%"><div><strong>${esc(s.completionRate+'%')}</strong><small>Completed</small></div></div><div class="v7-overview-numbers"><div><small>TUGAS SELESAI</small><strong>${num(s.completed)}</strong></div><div><small>MENUNGGU REVIEW</small><strong>${num(s.inReview)}</strong></div></div></div><div class="v7-overview-aside-foot"><span><i class="v7-sync-dot"></i>Sinkron ${esc(currentSync())}</span><button class="v7-overview-link" data-action="refresh">Segarkan ↻</button></div></aside></section>
-<div class="stats">${stat(staff?'Total Assignment':'Tugas Saya',num(s.total),staff?`${d.interns} peserta dikelola`:'Semua penugasan','▥')}${stat('Sedang Dikerjakan',num(s.inProgress),'In Progress','◴')}${stat('Menunggu Review',num(s.inReview),'Submission pending','◉')}${stat('Tingkat Penyelesaian',s.completionRate+'%',`${s.completed} tugas selesai`,'✓')}</div>
-<div class="v7-dashboard-section-intro"><div><span class="v7-overline">OPERATIONAL INSIGHTS</span><h3>Workspace intelligence <span>✧</span></h3><p>Ringkasan aktivitas dan prioritas dari data EduTask Anda.</p></div><span class="v7-date-chip">↗ &nbsp; Diperbarui ${esc(currentSync())}</span></div><div class="dashboard-grid v7-dashboard-grid"><div><section class="card card-pad"><div class="section-head"><h3 class="section-title">Weekly Completion <small>7 hari terakhir</small></h3>${badge(s.completed+' completed')}</div><div class="linechart">${line}</div></section><section class="card card-pad" style="margin-top:18px"><div class="section-head"><h3 class="section-title">Prioritas & Deadline <small>${d.earliest.length} terdekat</small></h3><button class="btn small" data-route="tasks">Semua tugas →</button></div>${d.earliest.length?d.earliest.map(t=>`<div class="mini-row"><div class="mini-icon">◷</div><div class="grow"><strong>${esc(t.title)}</strong><small>Deadline ${date(t.dueDate)} · ${t.progress}% progress</small></div>${t.isOverdue?badge('Overdue'):badge(t.taskStatus)}<button class="btn small" data-task="${esc(t.assignmentId)}">Lihat</button></div>`).join(''):empty('Tidak ada deadline mendekat','Tugas dengan deadline akan ditampilkan di sini.')}</section></div>
-<div><section class="card card-pad"><div class="section-head"><h3 class="section-title">Task Distribution</h3><small class="muted">${s.total} penugasan</small></div>${[['Completed',s.completed],['In Progress',s.inProgress],['In Review',s.inReview],['To Do',s.todo],['Revision',s.revision],['Overdue',s.overdue]].map(([name,v])=>`<div style="margin:18px 0"><div style="display:flex;justify-content:space-between;gap:9px;margin-bottom:8px;font-size:10px;font-weight:800"><span>${name}</span><span>${v}</span></div><div class="progress-track"><div class="fill" style="width:${s.total?Math.round(v/s.total*100):0}%"></div></div></div>`).join('')}</section><section class="card card-pad" style="margin-top:18px"><div class="section-head"><h3 class="section-title">Latest Activity</h3><button class="btn small" data-route="notifications">Notifikasi</button></div>${d.activities.length?d.activities.slice(0,5).map(a=>`<div class="activity-item"><i></i><div><b>${esc(nice(a.action))}</b><small>${esc(a.details||'Progress diperbarui')} · ${date(a.createdAt)}</small></div></div>`).join(''):empty('Belum ada aktivitas','Perubahan tugas akan terekam secara otomatis.')}</section></div></div>`;
+function renderDashboard(){
+ const d=state.dashboard;
+ if(!d){showInitialBoot();return;}
+ const oldNotice=state.snapshotStale?'<div class="ed-stale-note" role="status">◷ Ringkasan tersimpan dari sesi sebelumnya. Data terbaru sedang disinkronkan di latar belakang.</div>':'';
+ const s=d.stats||{},staff=isStaff();
+ const heroText=staff?'Semua tugas. Satu pusat kendali.':'Setiap progres adalah pencapaian.';
+ const heroSub=staff?'Kelola peserta magang, tinjau hasil pekerjaan, dan pastikan setiap milestone tercapai bersama.':'Jelajahi tugas prioritas, atur progres, dan maksimalkan pembelajaran setiap hari.';
+ const safeCount=value=>Math.max(0,Number(value)||0);
+ const total=safeCount(s.total),completed=safeCount(s.completed),inProgress=safeCount(s.inProgress),inReview=safeCount(s.inReview),todo=safeCount(s.todo),revision=safeCount(s.revision),overdue=safeCount(s.overdue);
+ const completionRate=Math.max(0,Math.min(100,Number(s.completionRate)||0));
+ const week=Array.isArray(d.weekly)&&d.weekly.length?d.weekly.slice(-7):Array.from({length:7},(_,i)=>{const day=new Date();day.setDate(day.getDate()-6+i);return {date:day.toISOString().slice(0,10),count:0};});
+ const weekCount=week.reduce((sum,item)=>sum+safeCount(item.count),0);
+ const weekMax=Math.max(1,...week.map(item=>safeCount(item.count)));
+ const dueList=Array.isArray(d.earliest)?d.earliest:[];
+ const activities=Array.isArray(d.activities)?d.activities:[];
+ const svg=(paths)=>`<svg viewBox="0 0 24 24" aria-hidden="true">${paths}</svg>`;
+ const iconStack=svg('<rect x="4" y="3.5" width="16" height="17" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/>');
+ const iconClock=svg('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>');
+ const iconReview=svg('<rect x="5" y="4" width="14" height="16" rx="2"/><path d="M8.5 10h7M8.5 14h4M15 16.5l1.5 1.5 3-3"/>');
+ const iconDone=svg('<path d="M4 12l5 5 11-11"/><path d="M6 5h5M6 20h12"/>');
+ const iconBars=svg('<path d="M4 20V12M9 20V6M14 20v-9M19 20V4"/>');
+ const iconPie=svg('<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5V12h8.5"/>');
+ const iconTarget=svg('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><path d="M12 10v4M10 12h4"/>');
+ const iconActivity=svg('<path d="M3 12h4l3-6 4 12 3-6h4"/>');
+ const kpi=(label,value,foot,icon,style='')=>`<article class="edv-kpi ${style}"><div class="edv-kpi-top"><span class="edv-kpi-label">${esc(label)}</span><span class="edv-kpi-icon">${icon}</span></div><strong class="edv-kpi-value">${esc(String(value))}</strong><div class="edv-kpi-foot"><span>${esc(foot)}</span><i aria-hidden="true"></i></div></article>`;
+ const panelHead=(icon,heading,description,extra='')=>`<div class="edv-panel-head"><div class="edv-panel-title"><span class="edv-panel-icon">${icon}</span><div><h4>${esc(heading)}</h4><p>${esc(description)}</p></div></div>${extra}</div>`;
+ const weeklyBars=week.map((item,index)=>{
+   const count=safeCount(item.count);
+   const label=new Date(String(item.date||'')+'T12:00:00');
+   const dayLabel=Number.isNaN(label.valueOf())?'—':label.toLocaleDateString('id-ID',{weekday:'short'});
+   const height=count?Math.max(8,Math.round(count/weekMax*127)):6;
+   return `<div class="edv-day" title="${esc(dayLabel)}: ${num(count)} tugas selesai"><div class="edv-day-plot"><span class="edv-bar-value">${num(count)}</span><span class="edv-bar ${count?'':'is-zero'}" style="height:${height}px"></span></div><span class="edv-day-label">${esc(dayLabel)}</span></div>`;
+ }).join('');
+ const dist=[
+  {label:'Selesai',value:completed,color:'#12b79d'},
+  {label:'Dikerjakan',value:inProgress,color:'#0b8299'},
+  {label:'Review',value:inReview,color:'#89a4ef'},
+  {label:'Belum dimulai',value:todo,color:'#9ddcc6'},
+  {label:'Revisi',value:revision,color:'#e8b777'}
+ ];
+ const accounted=dist.reduce((acc,row)=>acc+row.value,0);
+ if(total>accounted)dist.push({label:'Status lain',value:total-accounted,color:'#c7d8d4'});
+ const base=Math.max(total,accounted,1);
+ let deg=0;
+ const slices=[];
+ for(const item of dist){if(!item.value)continue;const next=deg+item.value/base*360;slices.push(`${item.color} ${deg.toFixed(2)}deg ${next.toFixed(2)}deg`);deg=next;}
+ if(deg<359.99)slices.push(`#e2f0eb ${deg.toFixed(2)}deg 360deg`);
+ const ring=slices.length?`conic-gradient(${slices.join(',')})`:'conic-gradient(#e3f0eb 0deg 360deg)';
+ const distributionRows=dist.slice(0,5).map(row=>`<div class="edv-dist-row"><span class="edv-dist-label"><i style="--edv-color:${row.color}"></i><span>${esc(row.label)}</span></span><b>${num(row.value)}</b></div>`).join('');
+ const deadlineRows=dueList.length?dueList.slice(0,4).map((task,i)=>`<article class="edv-deadline"><span class="edv-deadline-index">${String(i+1).padStart(2,'0')}</span><div class="edv-deadline-body"><div class="edv-deadline-title">${esc(task.title||'Tugas tanpa judul')}</div><div class="edv-deadline-meta"><span>${esc(date(task.dueDate))}</span><span>${Math.max(0,Math.min(100,Number(task.progress)||0))}% progres</span></div></div><div class="edv-deadline-actions">${badge(task.isOverdue?'Overdue':task.taskStatus)}<button class="edv-plain-btn" data-task="${esc(task.assignmentId||'')}">Detail →</button></div></article>`).join(''):
+ `<div class="edv-empty-mini"><span class="edv-empty-icon" aria-hidden="true">✧</span><strong>Semua prioritas terkendali</strong><p>Tugas yang mendekati tenggat akan muncul di sini secara otomatis.</p></div>`;
+ const activityRows=activities.length?activities.slice(0,5).map(activity=>`<article class="edv-activity-row"><span class="edv-activity-dot">${iconActivity}</span><div class="edv-activity-info"><strong>${esc(nice(activity.action||'Aktivitas'))}</strong><p>${esc(activity.details||'Pembaruan aktivitas tercatat')}</p></div><span class="edv-activity-date">${esc(date(activity.createdAt))}</span></article>`).join(''):
+ `<div class="edv-empty-mini"><span class="edv-empty-icon" aria-hidden="true">✧</span><strong>Aktivitas akan tercatat di sini</strong><p>Penugasan, review, dan perubahan progres muncul ketika tim mulai beraktivitas.</p></div>`;
+ $('#page').innerHTML=oldNotice+`<section class="hero v7-dashboard-hero"><div class="hero-inner"><div class="v7-hero-top"><span class="v7-brand-emblem">✦</span><span class="feature-kicker"><i class="signal"></i>EDUTASK · SMART WORKSPACE</span></div><div class="v7-hero-eyebrow">YOUR WORKSPACE / OVERVIEW</div><h2>${esc(heroText)}</h2><p>Halo, <strong>${esc(state.user.fullName.split(' ')[0])}</strong>! ${esc(heroSub)}</p><div class="feature-hero-meta"><span>SMARTER TASKS</span><span>BETTER GROWTH</span></div><button class="hero-btn" data-route="${staff?'reviews':'tasks'}">${staff?'Lihat pending review':'Jelajahi tugas saya'} <span>→</span></button></div><aside class="v7-overview-aside"><div class="v7-overview-aside-head"><span>WORKSPACE PERFORMANCE</span><span class="ed-live-pill"><i></i>Live</span></div><div class="v7-overview-progress"><div class="v7-overview-ring" style="--progress:${completionRate}%"><div><strong>${completionRate}%</strong><small>Completed</small></div></div><div class="v7-overview-numbers"><div><small>TUGAS SELESAI</small><strong>${num(completed)}</strong></div><div><small>MENUNGGU REVIEW</small><strong>${num(inReview)}</strong></div></div></div><div class="v7-overview-aside-foot"><span><i class="v7-sync-dot"></i>Sinkron ${esc(currentSync())}</span><button class="v7-overview-link" data-action="refresh"><span class="ed-refresh-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 4v5h5M4 13a8.1 8.1 0 0 0 15.5 2M20 20v-5h-5"/></svg></span> Segarkan</button></div></aside></section>
+ <section class="edv-overview" aria-label="Ringkasan operasional EduTask">
+  <div class="edv-kpis">
+   ${kpi(staff?'Total Assignment':'Tugas Saya',num(total),staff?`${num(d.interns||0)} peserta dikelola`:'Penugasan dalam workspace',iconStack)}
+   ${kpi('Sedang Dikerjakan',num(inProgress),'Tugas berstatus In Progress',iconClock,'cyan')}
+   ${kpi('Menunggu Review',num(inReview),'Submission yang perlu ditinjau',iconReview,'blue')}
+   ${kpi('Tingkat Penyelesaian',`${completionRate}%`,`${num(completed)} tugas selesai`,iconDone,'gold')}
+  </div>
+  <div class="edv-intro"><div class="edv-intro-copy"><span class="edv-eyebrow">Operational Intelligence</span><h3>Progres yang jelas. Keputusan yang tepat.</h3><p>Pantau ritme kerja, distribusi penugasan, dan aktivitas terbaru dalam satu tampilan yang lebih terarah.</p></div><span class="edv-sync-chip">${svg('<path d="M20 11a8 8 0 0 0-14-5M4 4v5h5M4 13a8 8 0 0 0 14 5M20 20v-5h-5"/>')} Diperbarui ${esc(currentSync())}</span></div>
+  <div class="edv-insights">
+   <section class="edv-insight edv-weekly">${panelHead(iconBars,'Weekly Completion','Penyelesaian pekerjaan dalam 7 hari terakhir',`<span class="edv-panel-tag">7 hari</span>`)}<div class="edv-chart-area"><div class="edv-bars">${weeklyBars}</div></div><div class="edv-week-foot"><span class="edv-week-note"><i class="edv-note-dot"></i>${weekCount?'Aktivitas penyelesaian selama periode ini':'Belum ada tugas selesai pada periode ini'}</span><strong>${num(weekCount)} completed</strong></div></section>
+   <section class="edv-insight edv-distribution">${panelHead(iconPie,'Task Distribution','Komposisi status tugas tim',`<span class="edv-panel-tag">${num(total)} tugas</span>`)}<div class="edv-dist-main"><div class="edv-donut" style="--edv-donut-bg:${ring}" role="img" aria-label="Distribusi ${num(total)} tugas"><div class="edv-donut-inner"><strong>${num(total)}</strong><span>Penugasan</span></div></div><div class="edv-dist-list">${distributionRows}</div></div><div class="edv-dist-footer"><span>Perlu perhatian khusus</span><strong>${num(overdue)} overdue</strong></div></section>
+   <section class="edv-insight edv-deadlines">${panelHead(iconTarget,'Prioritas & Deadline',`${num(dueList.length)} tenggat terdekat`,`<button class="edv-plain-btn" data-route="tasks">Semua tugas →</button>`)}<div class="edv-deadline-list">${deadlineRows}</div></section>
+   <section class="edv-insight edv-activity">${panelHead(iconActivity,'Latest Activity','Riwayat terbaru aktivitas workspace',`<button class="edv-plain-btn" data-route="notifications">Notifikasi →</button>`)}<div class="edv-activity-list">${activityRows}</div></section>
+  </div>
+ </section>`;
 }
 function userName(id){const u=state.userMap.get(id);return u?u.fullName:(id===state.user.id?state.user.fullName:(id?'Pengguna tidak tersedia':'—'));}
 function taskFiltered(){let rows=state.items.slice();if(state.route==='reviews')rows=rows.filter(r=>r.taskStatus==='In Review');if(state.route==='feedback')rows=rows.filter(r=>['Revision Required','In Review','Completed'].includes(r.taskStatus));
@@ -778,7 +1172,17 @@ function renderEvaluations(){const rows=state.items;const create=isStaff()?'<but
 $('#page').innerHTML=heading(create)+`<div class="card card-pad">${rows.length?`<div class="table-wrap"><table class="data-table"><thead><tr><th>Intern</th><th>Periode</th><th>Rata-rata skor</th><th>Status</th><th>Updated</th><th>Actions</th></tr></thead><tbody>${rows.map(r=>{const scores=['quality','timeliness','communication','initiative','collaboration','problemSolving','ownership','learning'].map(x=>Number(r[x]||0));return `<tr><td class="title-cell">${esc(userName(r.internId))}</td><td>${esc(r.period)}</td><td>${(scores.reduce((a,b)=>a+b,0)/8).toFixed(1)} / 100</td><td>${badge(r.published==='true'?'Published':'Draft')}</td><td>${date(r.updatedAt)}</td><td><div class="row-actions"><button class="btn small" data-eval="${esc(r.id)}">Detail</button>${isStaff()&&r.published!=='true'?`<button class="btn small primary" data-publish="${esc(r.id)}">Publish</button>`:''}</div></td></tr>`}).join('')}</tbody></table></div>`:empty('Belum ada evaluasi','Penilaian formal peserta akan tampil di sini.')}</div>`;}
 function renderReports(){const types=[['tasks','Task Completion'],['performance','Performance'],['daily','Daily Reports'],['evaluations','Evaluations'],['projects','Projects'],...(isAdmin()?[['audits','Audit Logs']]:[])];
 $('#page').innerHTML=heading()+`<div class="record-grid">${types.map(([value,label])=>`<article class="card record-card"><div class="mini-icon">↧</div><h3>${label}</h3><p>Ekspor data ${label.toLowerCase()} aktual sesuai hak akses Anda. Format CSV UTF-8 kompatibel dengan spreadsheet.</p><footer><span class="badge">CSV Export</span><button class="btn primary small" data-export="${value}">Unduh CSV ↓</button></footer></article>`).join('')}</div><p class="search-caption">* Ekspor memuat data dari backend sesuai role; tidak ada data simulasi.</p>`;}
-function renderProfile(){const u=state.user;$('#page').innerHTML=heading()+`<div class="dashboard-grid"><section class="card card-pad"><h3 class="section-title">Informasi Profil</h3><form id="profileForm"><div class="form-grid"><div class="field wide"><label>Nama lengkap</label><input class="input" name="fullName" value="${esc(u.fullName)}" required maxlength="120"></div><div class="field"><label>Email (read-only)</label><input class="input" value="${esc(u.email)}" disabled></div><div class="field"><label>Role</label><input class="input" value="${esc(nice(u.role))}" disabled></div><div class="field wide"><label>Foto profil (URL HTTPS)</label><input class="input" type="url" name="avatarUrl" value="${esc(u.avatarUrl||'')}" placeholder="https://..."></div><div class="field wide"><label>Nomor telepon</label><input class="input" name="phone" value="${esc(u.phone||'')}"></div></div><div class="modal-footer"><button class="btn primary" type="submit">Simpan profil</button></div></form></section><section class="card card-pad"><h3 class="section-title">Keamanan Akun</h3><p class="muted" style="line-height:1.9;margin-bottom:15px">Ubah password untuk melindungi akun Anda. Sesi pada perangkat lain akan dicabut.</p><form id="passwordForm"><div class="field"><label>Password saat ini</label><input class="input" type="password" name="currentPassword" required></div><div class="field"><label>Password baru (min. 12 karakter)</label><input class="input" type="password" name="newPassword" minlength="12" required></div><div class="modal-footer"><button class="btn primary" type="submit">Ubah password</button></div></form></section></div>`;}
+function renderProfile(){
+ const u=state.user,src=avatarSafeSource(u.avatarUrl),initial=initials(u.fullName);
+ stagedAvatarData=undefined;
+ $('#page').innerHTML=heading()+`<div class="ed-account-layout">
+ <section class="ed-account-primary">
+  <div class="ed-account-banner"><div class="ed-account-banner-copy"><span class="ed-account-overline">PERSONAL IDENTITY · EDUTASK</span><h2>Profil yang merepresentasikan Anda.</h2><p>Kelola identitas profesional dan foto akun dalam satu ruang kerja yang aman.</p></div><span class="ed-account-banner-spark" aria-hidden="true">✧</span></div>
+  <div class="ed-account-profile"><div class="ed-account-photo-row"><div id="profilePhotoPreview" class="ed-account-photo">${src?`<img src="${esc(src)}" alt="Foto profil">`:esc(initial)}</div><div class="ed-account-photo-info"><div class="ed-account-overline">FOTO PROFIL</div><strong>${esc(u.fullName)}</strong><span>${esc(nice(u.role))} · EduTask Workspace</span><div class="ed-account-photo-actions"><input type="file" id="profilePhotoFile" accept="image/jpeg,image/png,image/webp" aria-label="Pilih foto profil"><button class="btn primary" type="button" data-action="pickProfilePhoto">↥ Unggah foto</button><button class="btn" type="button" data-action="removeProfilePhoto">Hapus foto</button></div><small id="profilePhotoHint">JPG, PNG, atau WebP · maksimal 4 MB. Foto dioptimalkan untuk profil.</small></div></div>
+   <form id="profileForm"><div class="ed-account-section-title"><div><span>01 · INFORMASI PRIBADI</span><h3>Informasi akun</h3></div><span class="ed-account-state"><i></i> Terhubung</span></div><div class="ed-account-fields"><div class="field wide"><label>Nama lengkap</label><input class="input" name="fullName" value="${esc(u.fullName)}" required maxlength="120" autocomplete="name"></div><div class="field"><label>Email akun</label><input class="input" value="${esc(u.email)}" disabled title="Alamat email tidak dapat diubah di halaman ini"></div><div class="field"><label>Akses / role</label><input class="input" value="${esc(nice(u.role))}" disabled></div><div class="field wide"><label>Nomor telepon (opsional)</label><input class="input" name="phone" value="${esc(u.phone||'')}" maxlength="40" autocomplete="tel" placeholder="Nomor yang dapat dihubungi"></div></div><div class="ed-account-save"><span><i>✧</i> Perubahan tersimpan setelah dikonfirmasi server.</span><button type="submit" class="btn primary">✓ Simpan perubahan</button></div></form>
+  </div></section>
+ <aside class="ed-account-side"><div class="ed-account-security"><div class="ed-account-security-top"><span class="ed-account-shield">♢</span><div><span class="ed-account-overline">ACCOUNT PROTECTION</span><h3>Keamanan akun</h3></div></div><p>Gunakan password unik untuk melindungi pekerjaan dan data internship Anda.</p><form id="passwordForm"><div class="field"><label>Password saat ini</label><input class="input" type="password" name="currentPassword" autocomplete="current-password" required></div><div class="field"><label>Password baru (min. 12 karakter)</label><input class="input" type="password" name="newPassword" minlength="12" autocomplete="new-password" required></div><button class="btn primary ed-account-password-save" type="submit">Perbarui password →</button></form></div><div class="ed-account-privacy"><span>✧ PRIVASI & AKSES</span><h4>Satu profil. Lebih terarah.</h4><p>Foto Anda diunggah sebagai thumbnail yang diperkecil agar penyimpanan cepat dan ringan. Role ditentukan oleh admin, bukan oleh browser.</p></div></aside></div>`;
+}
 function renderSettings(){const rows=state.items;$('#page').innerHTML=heading('<button class="btn primary" data-add="AppSettings">＋ Pengaturan</button>')+`<div class="record-grid">${[['programs','Programs'],['criteria','Evaluation Criteria'],['teams','Teams'],['mentorships','Mentor Assignments'],['members','Project Memberships']].map(([r,l])=>`<article class="card record-card"><div class="mini-icon">⚙</div><h3>${l}</h3><p>Atur konfigurasi dan hubungan data di ${l.toLowerCase()}.</p><footer><span class="badge">Manage</span><button class="btn small" data-route="${r}">Buka →</button></footer></article>`).join('')}</div><section class="card card-pad" style="margin-top:20px"><h3 class="section-title">Application Preferences</h3>${rows.length?rows.map(r=>`<div class="mini-row"><div class="mini-icon">⚙</div><div class="grow"><strong>${esc(r.key)}</strong><small>${esc(r.value)}</small></div><button class="btn small" data-edit="AppSettings:${r.id}">Edit</button></div>`).join(''):empty('Belum ada pengaturan','Gunakan tombol di atas untuk menambahkan pengaturan internal.')}</section>`;}
 
 const smartState={cache:new Map(),plan:null,ranking:[],catalog:null,submitting:false};
@@ -1225,7 +1629,24 @@ async function growthHandleSubmit(form){
 }
 // ================= END GROWTH SUITE V11 =================
 
-function render(){if(GROWTH_ROUTES.includes(state.route))return growthRender();if(SMART_ROUTES.includes(state.route)){nav();updateSyncStatus();$('#crumb').textContent=title(state.route);$('#topTitle').textContent=title(state.route);$('#todayText').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'});return smartRender();}nav();updateSyncStatus();$('#crumb').textContent=title(state.route);$('#topTitle').textContent=state.route==='overview'?'Workspace Overview':title(state.route);$('#todayText').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'});
+function updateRouteHeader(route){
+ const label=title(route);
+ const crumb=$('#crumb'), heading=$('#topTitle'), today=$('#todayText');
+ if(crumb)crumb.textContent=label;
+ if(heading)heading.textContent=route==='overview'?'Workspace Overview':label;
+ if(today)today.textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'});
+ updateSyncStatus();
+}
+function renderPendingRoute(route){
+ if(!route || route!==state.route)return;
+ nav();updateRouteHeader(route);
+ const sync=$('#workspaceSync');
+ if(sync){sync.dataset.mode='loading';sync.textContent='Memuat '+title(route)+'…';}
+ $('#page').innerHTML=heading('',true)+premiumSkeleton(route,true);
+}
+function render(){
+ if(routePending===state.route){renderPendingRoute(state.route);return;}
+ if(GROWTH_ROUTES.includes(state.route))return growthRender();if(SMART_ROUTES.includes(state.route)){nav();updateSyncStatus();$('#crumb').textContent=title(state.route);$('#topTitle').textContent=title(state.route);$('#todayText').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'});return smartRender();}nav();updateSyncStatus();$('#crumb').textContent=title(state.route);$('#topTitle').textContent=state.route==='overview'?'Workspace Overview':title(state.route);$('#todayText').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'});
 const route=state.route;
 if(route==='overview')return renderDashboard();
 if(['tasks','monitoring','reviews','feedback'].includes(route))return renderTasks();
@@ -1241,7 +1662,7 @@ if(TABLE[route])return renderGeneric();
 $('#page').innerHTML=heading()+empty('Halaman tidak ditemukan','Pilih salah satu modul dari sidebar.');}
 async function getRows(table){return E.api('records.list',{table});}
 async function loadDashboard(force=false){
- const d=await E.api(isStaff()?'dashboard.mentor':'dashboard.intern',{}, {fresh:force});
+ const d=await E.api(isStaff()?'dashboard.mentor':'dashboard.intern',{}, {fresh:force,timeout:19000,noRetry:true});
  state.dashboard=d;state.snapshotStale=false;state.lastSync=Date.now();cacheSafeDashboard();
  updateSyncStatus();return d;
 }
@@ -1250,14 +1671,21 @@ async function loadRoute(route,force=false){
  const allRoutes=(isStaff()?NAV_STAFF:NAV_INTERN).flatMap(x=>x[1]);
  if(!allRoutes.includes(route)||(!isAdmin()&&['settings','programs','criteria','members','mentorships','mentors','audit'].includes(route)))route='overview';
  const changed=state.route!==route;state.route=route;
- if(changed){state.search='';state.status='';state.programFilter='';state.batchFilter='';state.sort='newest';state.page=1;state.view='table';}
- side(false);nav();
+ // Invalidate pending visual immediately on every navigation. Request sequence protects late responses.
+ if(changed){
+  routePending=null;
+  state.search='';state.status='';state.programFilter='';state.batchFilter='';state.sort='newest';state.page=1;state.view='table';
+  // The previous screen may have been scrolled down: a new feature always starts at the top.
+  window.scrollTo(0,0);
+  const area=$('.main');if(area && area.scrollTop)area.scrollTop=0;
+ }
+ side(false);nav();updateRouteHeader(route);
  if(route==='overview'){
   if(state.dashboard){render();
    if(force){await loadDashboard(true);if(sequence===routeSequence)render();}
    else if(!state.snapshotStale&&Date.now()-state.lastSync>45000)queueRouteRevalidation('overview');
    return;}
-  $('#page').innerHTML=premiumSkeleton('overview');await loadDashboard(true);if(sequence===routeSequence)render();return;
+  showInitialBoot();await loadDashboard(true);if(sequence===routeSequence){render();revealInitialDashboard();}return;
  }
  if(route==='profile'||route==='reports'){render();return;}
  if(GROWTH_ROUTES.includes(route)){await growthLoad(route,force);return;}
@@ -1266,12 +1694,19 @@ async function loadRoute(route,force=false){
  if(hit){
   state.items=hit.data;render();
   if(!force){if(Date.now()-hit.time>75000)queueRouteRevalidation(route);return;}
- }else $('#page').innerHTML=heading()+premiumSkeleton(route);
+ }else {
+  // Never retain Settings/Templates/other route's old data during an incoming request.
+  routePending=route;state.items=[];renderPendingRoute(route);
+ }
  try{
   const taskRoute=['tasks','monitoring','reviews','feedback','calendar'].includes(route);
   let result;
   if(taskRoute){
-   const [tasks,users]=await Promise.all([E.api('tasks.list',{}, {fresh:force}),getUsersSmart(force)]);
+   const knownUsers=[...state.userMap.values()];
+   const needUserFetch=knownUsers.length<2 || (Date.now()-state.referenceTime>OPTION_TTL_MS && force);
+   const tasksPromise=E.api('tasks.list',{}, {fresh:force,timeout:18000,noRetry:true});
+   const usersPromise=needUserFetch?getUsersSmart(force).catch(err=>{console.debug('[EduTask] User labels memakai cache',err.code);return knownUsers;}):Promise.resolve(knownUsers);
+   const [tasks,users]=await Promise.all([tasksPromise,usersPromise]);
    users.forEach(u=>state.userMap.set(u.id,u));result=tasks;
   }else if(route==='interns'||route==='mentors'){
    if(isAdmin()){
@@ -1291,12 +1726,14 @@ async function loadRoute(route,force=false){
   }else result=[];
   state.cache.set(route,{data:result,time:Date.now()});
   if(sequence!==routeSequence||state.route!==route)return;
+  routePending=null;
   state.lastSync=Date.now();state.items=result;render();
   console.info(`⚡ [EduTask] ${route}: ${Math.round(performance.now()-navStarted)}ms ${hit?'(stale data refreshed)':''}`);
  }catch(err){
   if(sequence!==routeSequence||state.route!==route)return;
+  routePending=null;
   if(hit){console.warn('[EduTask] Refresh tertunda, data terakhir dipertahankan',err.code);throw err;}
-  $('#page').innerHTML=heading()+`<div class="empty"><div class="em-icon">⚠</div><h3>Data belum dapat dimuat</h3><p>${esc(err.message)}</p><button class="btn primary" data-action="refresh">Coba lagi ↻</button></div>`;
+  $('#page').innerHTML=heading()+`<div class="empty"><div class="em-icon">⚠</div><h3>Data belum dapat dimuat</h3><p>${esc(err.message)}</p><button class="btn primary" data-action="refresh"><span class="ed-refresh-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 4v5h5M4 13a8.1 8.1 0 0 0 15.5 2M20 20v-5h-5"/></svg></span> Coba lagi</button></div>`;
   toast(err.message,true);throw err;
  }
 }
@@ -1466,8 +1903,15 @@ async function openAssignmentForm(task){
   holder.innerHTML=internCheckOptions(users.filter(u=>u.role==='intern'),selected);
  }catch(err){if(form.isConnected)toast(err.message,true);}
 }
-async function openTaskDetail(assignmentId){showModal('Memuat detail tugas…',formSkeleton(),'TASK DETAIL');
-try{const d=await E.api('tasks.get',{assignmentId});state.detail=d;const t=d.task;
+let activeTaskDetailSequence=0;
+async function openTaskDetail(assignmentId){
+ const thisDetailSequence=++activeTaskDetailSequence;
+ const known=(state.items||[]).find(x=>x.assignmentId===assignmentId)||[...state.cache.values()].flatMap(x=>Array.isArray(x.data)?x.data:[]).find(x=>x.assignmentId===assignmentId);
+ const preview=known?`<div class="detail-grid"><div><div class="section-head"><h3 class="section-title">${esc(known.title||'Detail tugas')}</h3>${badge(known.priority||'Medium')}</div><div class="detail-field"><dt>Deskripsi</dt><dd>${esc(known.description||'—')}</dd></div><div class="detail-field"><dt>Deadline</dt><dd>${esc(date(known.dueDate)||'—')}</dd></div></div><aside class="card" style="padding:18px;box-shadow:none"><span class="badge">${esc(known.taskStatus||'To Do')}</span><div class="detail-field"><dt>Progress</dt><dd>${esc(String(known.progress||0))}%</dd></div><div class="progress-track"><div class="fill" style="width:${Math.max(0,Math.min(100,Number(known.progress)||0))}%"></div></div><p class="muted" style="margin-top:12px">Memuat komentar, submission dan riwayat review…</p></aside></div>`:formSkeleton();
+ showModal(known?.title||'Memuat detail tugas…',preview,'TASK DETAIL');
+ try{const d=await E.api('tasks.get',{assignmentId},{timeout:16000,noRetry:true});
+ if(!$('#overlay')?.classList.contains('show')||thisDetailSequence!==activeTaskDetailSequence)return;
+ state.detail=d;const t=d.task;
  const row=(k,v)=>`<div class="detail-field"><dt>${esc(k)}</dt><dd>${esc(v||'—')}</dd></div>`;
  const link=x=>/^https:\/\//.test(String(x||''))?`<a style="color:#078f8b;word-break:break-all" href="${esc(x)}" target="_blank" rel="noopener noreferrer">${esc(x)}</a>`:esc(x);
  const members=isStaff()?`<div style="margin-bottom:14px">${row('Assigned intern',userName(t.internId))}</div>`:'';
@@ -1480,7 +1924,7 @@ try{const d=await E.api('tasks.get',{assignmentId});state.detail=d;const t=d.tas
  const subtaskHtml=`<section style="margin-bottom:17px"><h3 class="section-title">Checklist & subtasks</h3>${t.checklist?`<div class="detail-field"><dd>${esc(t.checklist)}</dd></div>`:''}${d.subtasks.map(s=>`<label class="check-line"><input type="checkbox" data-subtask="${esc(s.id)}" ${s.done==='true'?'checked':''} ${t.taskStatus==='Completed'?'disabled':''}><span>${esc(s.title)}</span></label>`).join('')}${t.taskStatus!=='Completed'?`<form id="subtaskForm" data-id="${esc(t.assignmentId)}" class="inline-form" style="display:flex;gap:8px"><input class="input" name="title" placeholder="Tambahkan subtask…" required style="flex:1"><button class="btn small" type="submit">＋ Tambah</button></form>`:''}</section>`;
  $('#modalTitle').textContent=t.title;$('#modalLabel').textContent='TASK ASSIGNMENT · '+t.assignmentId.slice(-8);$('#modalDesc').textContent='Setiap peserta memiliki progress dan submission masing-masing.';
  $('#modalBody').innerHTML=`<div class="detail-grid"><div><div class="section-head"><h3 class="section-title">Task Information</h3>${badge(t.priority||'Medium')}</div>${row('Description',t.description)}${row('Instructions',t.instructions)}${row('Supporting links',t.links)}${row('Catatan mentor',t.notes)}${subtaskHtml}<h3 class="section-title">Submission history (${d.submissions.length})</h3>${submissions}<h3 class="section-title" style="margin-top:20px">Feedback & revisions</h3>${reviews}</div><div><div class="card" style="padding:20px;background:#fcfffd;box-shadow:none">${members}<div class="detail-field"><dt>Status</dt><dd>${badge(t.taskStatus)} ${t.isOverdue?badge('Overdue'):''}</dd></div>${row('Deadline',date(t.dueDate))}${row('Start',date(t.startDate))}${row('Progress',t.progress+'%')}<div class="progress-track" style="margin-bottom:20px"><div class="fill" style="width:${t.progress}%"></div></div>${row('Revisi',t.revisions)}${isStaff()?`<button class="btn small" data-assign="${esc(t.id)}">＋ Tambah penerima</button>`:''}</div>${progressForm}${submitForm}${reviewForm}</div></div><hr class="section-break"><h3 class="section-title">Discussion & Activity</h3>${comments}<form id="commentForm" class="inline-form" data-id="${esc(t.assignmentId)}"><div class="field"><label>Tulis komentar</label><textarea name="message" class="textarea" placeholder="Diskusi dan feedback untuk tugas ini…" required></textarea></div><button class="btn primary small" type="submit">Kirim komentar</button></form><details style="margin-top:20px"><summary style="font-weight:800;cursor:pointer">Activity history (${d.activity.length})</summary>${d.activity.map(a=>`<div class="activity-item"><i></i><div><b>${esc(nice(a.action))}</b><small>${esc(a.details)} · ${date(a.createdAt)}</small></div></div>`).join('')}</details><div class="modal-footer"><button class="btn" data-action="closeModal" type="button">Tutup</button>${isStaff()&&(isAdmin()||t.mentorId===state.user.id)?`<button class="btn" data-edit-task="${esc(t.id)}">✎ Edit tugas</button><button class="btn danger" data-archive-task="${esc(t.id)}">Arsipkan tugas</button>`:''}</div>`;
-}catch(err){toast(err.message,true);closeModal();}}
+}catch(err){if(thisDetailSequence!==activeTaskDetailSequence)return;toast(err.message,true);closeModal();}}
 async function openEvaluationForm(item=null){
  const keys=[['quality','Quality of Work'],['timeliness','Timeliness'],['communication','Communication'],['initiative','Initiative'],['collaboration','Collaboration'],['problemSolving','Problem Solving'],['ownership','Task Ownership'],['learning','Learning Progress']];
  const cached=[...state.userMap.values()].filter(u=>u.role==='intern');
@@ -1592,36 +2036,62 @@ async function exportFile(type){try{const result=await E.api('reports.export',{t
 async function init(){
  if(initInFlight)return initInFlight;
  if(!E.state.token){location.replace('index.html?tab=login');return;}
- const start=performance.now();
- const hint=E.state.user;
- if(hint?.id&&hint?.role){
-  state.user=hint;state.role=hint.role;state.userMap.set(hint.id,hint);
-  const summary=E.scoped.get();
-  if(summary){state.dashboard=summary.data;state.snapshotStale=true;state.lastSync=summary.timestamp;render();
-    console.info('⚡ [EduTask] Instant shell dari ringkasan lokal: '+Math.round(performance.now()-start)+'ms');}
-  else{nav();updateSyncStatus();$('#page').innerHTML=heading()+premiumSkeleton('overview');}
- }else $('#page').innerHTML=premiumSkeleton('overview');
+ const start=performance.now(), hint=E.state.user;
+ document.body.classList.add('ed-auth-booting');
+ document.body.classList.remove('ed-auth-ready');
+ state.authReady=false;routePending=null;
+ showInitialBoot();
+ // Authorization is intentionally independent from loading the expensive dashboard.
  initInFlight=(async()=>{
   try{
-   // Authenticate and fetch the authorized dashboard in one round trip.
-   const result=await E.api('dashboard.refresh',{}, {timeout:30000,fresh:true});
+   const result=await E.api('auth.session',{}, {fresh:true,timeout:15000,noRetry:true});
    if(!E.state.token)return;
-   const claimedId=hint?.id,claimedRole=hint?.role;
-   if(claimedId&&(claimedId!==result.user.id||claimedRole!==result.user.role))E.scoped.clear();
-   state.user=result.user;state.role=result.user.role;E.state.user=result.user;
-   state.userMap.clear();state.userMap.set(result.user.id,result.user);
-   state.authReady=true;state.snapshotStale=false;state.dashboard=result;state.lastSync=Date.now();
-    startLiveSync();
-   E.scoped.put(result);
-   if(state.route==='overview')render();else {nav();updateSyncStatus();}
-   performance.mark('edutask:main:ready');performance.measure('edutask:workspace-boot','edutask:main:start','edutask:main:ready');
-   console.info(`⚡ [EduTask] Authenticated dashboard siap: ${Math.round(performance.now()-start)}ms`);
+   const user=result?.user;
+   if(!user?.id||!['admin','mentor','intern'].includes(user.role))throw new Error('Data sesi tidak valid.');
+   if(hint?.id&&(hint.id!==user.id||hint.role!==user.role))E.scoped.clear();
+   E.state.user=user;state.user=user;state.role=user.role;
+   state.userMap.clear();state.userMap.set(user.id,user);
+   state.authReady=true;
+   const cached=E.scoped.get();
+   if(cached){
+    // Only numeric counters/anonymous weekly bars were stored on disk; hydrate after RBAC.
+    state.dashboard={...cached.data,user};
+    state.lastSync=cached.timestamp;state.snapshotStale=true;
+   }else {state.dashboard=null;state.lastSync=0;state.snapshotStale=false;}
+   document.body.classList.remove('ed-auth-booting');
+   document.body.classList.add('ed-auth-ready');
+   nav();updateRouteHeader(state.route);
+   if(state.route==='overview'){
+    if(state.dashboard){render();revealInitialDashboard();}
+    else showInitialBoot();
+   }else renderPendingRoute(state.route);
+   performance.mark('edutask:auth:ready');
+   console.info(`⚡ [EduTask V14] Sesi terverifikasi: ${Math.round(performance.now()-start)}ms · shell siap`);
+   startLiveSync();
+   // Deliberately does not block the workspace or route transitions.
+   Promise.resolve().then(async()=>{
+    try{
+     const d=await loadDashboard(true);
+     if(!state.authReady||!E.state.token)return;
+     if(state.route==='overview'){render();revealInitialDashboard();}
+     // Prime shared form references AFTER primary dashboard and only for staff.
+     if(isStaff()&&typeof E.prefetch==='function'){
+      setTimeout(()=>{if(state.authReady&&!document.hidden)ensureReferences().catch(err=>console.debug('[EduTask] Referensi disiapkan nanti',err.code));},650);
+     }
+     console.info(`⚡ [EduTask V14] Dashboard backend: ${Math.round(performance.now()-start)}ms`);
+    }catch(error){
+     console.warn('[EduTask V14] Dashboard refresh ditunda',error.code||error.message);
+     if(state.route==='overview'&&!state.dashboard&&state.authReady){
+      $('#page').innerHTML=`<section class="ed-boot-error" role="alert"><div class="ed-boot-error-icon">!</div><h2>Data sementara belum tersedia</h2><p>${esc(error.message||'Koneksi backend sedang lambat.')} Sesi Anda tetap aktif.</p><div class="ed-boot-error-actions"><button class="btn primary" data-action="refresh">Coba muat data</button></div></section>`;
+     }
+    }
+   });
   }catch(err){
    if(!E.state.token){location.replace('index.html?tab=login');return;}
    state.authReady=false;state.snapshotStale=true;
-   if(state.dashboard){render();toast('Tidak dapat menyinkronkan data baru. Informasi yang terlihat adalah ringkasan lama dan tidak dapat diedit.',true);}
-   else $('#page').innerHTML=`<div class="empty"><div class="em-icon">⚠</div><h3>Gagal membuka workspace</h3><p>${esc(err.message)}</p><button class="btn primary" data-action="retryInit">Coba lagi</button><button class="btn" data-action="logout">Kembali ke login</button></div>`;
-   console.warn('[EduTask] Backend tidak dapat dihubungi',err.code||'NETWORK_ERROR');
+   document.body.classList.add('ed-auth-booting');document.body.classList.remove('ed-auth-ready');
+   $('#page').innerHTML=`<section class="ed-boot-error" role="alert"><div class="ed-boot-error-icon">!</div><h2>Belum dapat memverifikasi sesi</h2><p>${esc(err.message||'Koneksi bermasalah.')} Tidak ada data pribadi yang ditampilkan sebelum sesi terverifikasi.</p><div class="ed-boot-error-actions"><button class="btn primary" data-action="retryInit">Coba lagi</button><button class="btn" data-action="logout">Kembali ke login</button></div></section>`;
+   console.warn('[EduTask] Validasi sesi gagal',err.code||err.message);
   }finally{initInFlight=null;updateSyncStatus();}
  })();
  return initInFlight;
@@ -1632,7 +2102,7 @@ async function init(){
    perform a full read only on change, and pause DOM replacement while users edit. */
 let liveChannel=null, liveTimer=null, liveInFlight=false, liveVersion=null,
     livePending=false, liveLastPoll=0, logoutInProgress=false, liveFailures=0;
-const LIVE_ACTIVE_MS=6500, LIVE_IDLE_MS=14000, LIVE_MIN_GAP_MS=3500;
+const LIVE_ACTIVE_MS=4500, LIVE_IDLE_MS=16000, LIVE_MIN_GAP_MS=3200;
 function stopLiveSync(){if(liveTimer){clearTimeout(liveTimer);liveTimer=null;}}
 function editorBusy(){return !!($('#overlay')?.classList.contains('show')) ||
   !!document.activeElement?.closest('#page input, #page textarea, #page select, #page [contenteditable=true]');}
@@ -1693,12 +2163,12 @@ function startLiveSync(){
    liveChannel.onmessage=event=>{
     if(event.data?.type==='edutask-change'&&state.authReady){
       remoteDataChanged('another-tab');
-      queueLivePoll(1500);
+      queueLivePoll(350);
     }
    };
   }catch(_) {liveChannel=null;}
  }
- queueLivePoll(1200);
+ queueLivePoll(750);
 }
 
 async function handleClick(e){const t=e.target.closest('button,[data-route]');if(!t)return;
@@ -1723,6 +2193,8 @@ async function handleClick(e){const t=e.target.closest('button,[data-route]');if
     finally{E.setSession('');try{liveChannel?.close()}catch(_){} location.replace('index.html?tab=login');}
     return;
    }
+  if(a==='pickProfilePhoto'){$('#profilePhotoFile')?.click();return;}
+  if(a==='removeProfilePhoto'){stagedAvatarData='';avatarPreview('');const hint=$('#profilePhotoHint');if(hint)hint.textContent='Foto akan dihapus setelah Anda menyimpan perubahan.';return;}
   if(a==='newTask'){await openTaskForm();return;}
   if(a==='newEvaluation'){await openEvaluationForm();return;}
   if(a==='invite'){await openInvite();return;}
@@ -1767,14 +2239,29 @@ async function handleSubmit(e){const form=e.target;if(!form.id)return;e.preventD
   else if(form.id==='reviewForm'){if(values.decision==='revision'&&!values.feedback.trim())throw new Error('Feedback wajib untuk revisi.');await mutate(values.decision==='revision'?'tasks.requestRevision':'tasks.approve',{assignmentId:form.dataset.id,feedback:values.feedback,score:values.score});}
   else if(form.id==='commentForm')await mutate('tasks.comments',{mode:'add',assignmentId:form.dataset.id,message:values.message},{keepModal:true,assignmentId:form.dataset.id});
   else if(form.id==='subtaskForm')await mutate('records.save',{table:'Subtasks',data:{assignmentId:form.dataset.id,title:values.title,done:'false'}},{keepModal:true,assignmentId:form.dataset.id});
-  else if(form.id==='profileForm'){const update=await E.api('users.update',{id:state.user.id,...values});state.user={...state.user,...update};E.state.user=state.user;toast('Profil berhasil diperbarui.');render();}
+  else if(form.id==='profileForm'){
+   const payload={id:state.user.id,fullName:values.fullName,phone:values.phone};
+   if(stagedAvatarData!==undefined)payload.avatarData=stagedAvatarData;
+   const updated=await E.api('users.update',payload);
+   state.user={...state.user,...updated};E.state.user=state.user;
+   state.userMap.set(state.user.id,state.user);
+   stagedAvatarData=undefined;toast('Profil dan foto berhasil diperbarui.');render();
+  }
   else if(form.id==='passwordForm'){await E.api('auth.changePassword',values);form.reset();toast('Password berhasil diperbarui. Sesi perangkat lain dicabut.');}
  }catch(err){toast(err.message,true);}finally{form.dataset.saving='false';if(submit&&submit.isConnected){submit.disabled=false;submit.textContent=submit.dataset.oldText||'Simpan';}}
 }
 let searchTimer;
 function handleSearch(e){if(e.target.id!=='search')return;const value=e.target.value,route=state.route,caret=e.target.selectionStart;
 clearTimeout(searchTimer);searchTimer=setTimeout(()=>{if(state.route!==route)return;state.search=value;state.page=1;render();const input=$('#search');if(input){input.focus();input.setSelectionRange(Math.min(caret,value.length),Math.min(caret,value.length));}},200);}
-async function handleChange(e){if(e.target.id==='statusFilter'){state.status=e.target.value;state.page=1;render();}
+async function handleChange(e){
+ if(e.target.id==='profilePhotoFile'){
+  const file=e.target.files?.[0];if(!file)return;
+  const hint=$('#profilePhotoHint');if(hint)hint.textContent='Menyiapkan pratinjau foto…';
+  try{stagedAvatarData=await compressProfilePhoto(file);avatarPreview(stagedAvatarData);if(hint)hint.textContent='Foto siap diunggah. Klik Simpan perubahan untuk menyimpannya.';}
+  catch(err){if(hint)hint.textContent=err.message;toast(err.message,true);}
+  return;
+ }
+ if(e.target.id==='statusFilter'){state.status=e.target.value;state.page=1;render();}
 else if(e.target.id==='sortFilter'){state.sort=e.target.value;state.page=1;render();}
 else if(e.target.id==='programFilter'){state.programFilter=e.target.value;state.page=1;render();}
 else if(e.target.id==='batchFilter'){state.batchFilter=e.target.value;state.page=1;render();}
@@ -1796,6 +2283,12 @@ document.addEventListener('visibilitychange',()=>{
 });
 document.addEventListener('focusout',()=>{
  if(livePending)setTimeout(()=>{if(livePending&&!editorBusy())remoteDataChanged('editing-finished');},130);
+});
+
+window.EdutaskSpeed=Object.freeze({
+ report(){console.group('⚡ EduTask V14 speed');console.log('Auth ready',state.authReady,'Current route',state.route,'Modules cached',state.cache.size,'Reference sets',Object.fromEntries(Object.entries(state.refs).map(([k,v])=>[k,v.size])));console.log('Realtime (polling) interval:',LIVE_ACTIVE_MS,'ms (not guaranteed delivery)');console.groupEnd();return window.EdutaskPerf?.report?.();},
+ refreshCurrent:()=>refresh(),
+ refreshReferences:()=>ensureReferences(true)
 });
 window.EdutaskLive=Object.freeze({status:()=>({version:liveVersion,pending:livePending,intervalMs:LIVE_ACTIVE_MS,loggedIn:state.authReady,lastPollMs:Math.round(performance.now()-liveLastPoll)}),check:()=>pollLiveUpdates('manual')});
 if('PerformanceObserver' in window){
