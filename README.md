@@ -1,96 +1,51 @@
-# EduTask — Smarter Tasks. Better Growth.
+# EduTask Performance V14 — Installation & Validation
 
-A source-code implementation for an internal internship workspace with 5 primary source files:
-`index.html`, `verify.html`, `main.html`, `config.js`, `Code.gs`.
+This is a *compatible replacement* for EduTask V13.3 `main.html`, V6 `config.js` API client, and V13.2 `Code.gs` (which already includes the V11 mentorship modules and V10 smart operations). No Sheets recreation, account bootstrap, or migration is required. Back up your files and Google Sheet before production deployment.
 
-**Mandatory sixth infrastructure file:** `api/proxy.js`. Google Apps Script ContentService
-cannot provide arbitrary CORS headers/preflight behavior for a Vercel-hosted app.
-Vercel's server-side function proxies POST requests to GAS, follows Google's redirects,
-and keeps the GAS deployment URL in an environment variable instead of frontend code.
+## What actually changes
 
-## Deployment
+- **Startup:** Display anonymous app shell and Finora-style loading skeleton first. Verify the current session via `auth.session` (small response), *then* unlock protected menus. Fetch `dashboard.mentor`/`dashboard.intern` in the background. Cached numeric aggregates are only rendered after successful session validation. The initial dashboard may still take time if the server is cold.
+- **Navigation:** Keep the current route title and skeleton immediately, use per-route in-memory caching, avoid repeating `users.list` while usable user references are already loaded, and prefetch form references after the dashboard rather than blocking the form on each opening.
+- **Task details:** Show the known task title/status/progress immediately from the already-loaded list. Fetch comments, submissions and reviews separately. On first open, details still need a real backend response.
+- **Backend:** Add an ephemeral per-token authorization cache for six seconds, with explicit invalidation after logout/password reset/role change/deactivation. Dashboard data cached by account ID + role + global change version for 22 seconds (no cross-account cached projection). Add a similarly short summary-metrics cache.
+- **Email and OTP:** Reduce one Sheets write for successful OTP validation; release the global script lock before calling MailApp for invitations, registration and password resets. Email transport latency is still external.
+- **Cross-account sync:** Check `sync.version` approximately every 4.5 seconds in visible active tabs, more slowly in hidden tabs. Read the active module again only after the change marker changes; the pending editor's form is not overwritten. Same-origin tabs can use BroadcastChannel to notify promptly. This is **not guaranteed real-time within 1 second across devices**.
+- **Diagnostics:** `EdutaskPerf.report()` prints API measurements with p50 and p95; `EdutaskSpeed.report()` reports route cache state and sync polling interval.
 
-1. Create a Google Spreadsheet. Copy its ID from `docs.google.com/spreadsheets/d/ID/edit`.
-2. Create a standalone Apps Script project. Paste `Code.gs`. Enable V8.
-3. Under **Project Settings → Script properties**, set:
-   - `EDUTASK_SPREADSHEET_ID` = Spreadsheet ID
-   - `EDUTASK_APP_URL` = Vercel frontend origin, e.g. `https://your-project.vercel.app`
-   - `EDUTASK_BOOTSTRAP_EMAIL` = administrator's email
-   - `EDUTASK_BOOTSTRAP_PASSWORD` = unique temporary password (16+ characters)
-4. In Apps Script, run `setupEdutask()` once, authorize Sheets and MailApp. Verify 28 sheets.
-5. Run `bootstrapInitialAdmin()` once. Password bootstrap property is removed automatically.
-   Sign in with your bootstrap email and password, then change that password.
-6. Deploy Apps Script: **Deploy → New deployment → Web app**. Execute as **Me**, access **Anyone**.
-   This makes the API URL publicly reachable, but API data still requires server-side
-   authentication. Do not publish the spreadsheet itself.
-7. Deploy this entire repository to Vercel using the static project preset. Do not
-   deploy only the five main files: include the mandatory `api/proxy.js`.
-8. Set the Vercel environment variable `EDUTASK_GAS_URL` to the Apps Script Web App
-   `/exec` URL. Redeploy to pick up the environment variable.
-9. Open `/index.html`. Log in as initial admin. Invite interns/mentors from Intern
-   Management. Registrants use the emailed invitation code, verify email, then log in.
-10. After editing `Code.gs`, create a **new deployment version** or update existing
-    deployment to the newest version. Test API from Vercel after every change.
+## Install
 
-## Test sequence
+1. Back up current `main.html`, `config.js`, `Code.gs`, and the entire Google Sheets database.
+2. Open the existing Apps Script project, replace **only** `Code.gs` with V14, Save. Do not run `bootstrapInitialAdmin()` or create another spreadsheet.
+3. Apps Script: **Deploy → Manage deployments → Edit current deployment → New version → Deploy**. Keep the same `/exec` URL.
+4. In your VS Code EduTask folder, replace `main.html` and `config.js`. Keep `api/proxy.js`, `index.html` and `verify.html` as they are if your Fast Auth V3 credentials already work.
+5. In Vercel, ensure `EDUTASK_GAS_URL`, `EDUTASK_KDF_PEPPER`, and `EDUTASK_PROXY_SIGNING_KEY` remain set as appropriate for Production and Development. Never add these secrets to HTML or Git.
+6. Start local using `npx vercel@latest pull --environment=development` and `npx vercel@latest dev`. Visit the local URL printed by the CLI.
+7. Log in as admin, mentor, and intern in separate browser profiles. Test login, session restoration, navigation, form submission, task detail, OTP, password reset, logout, and cross-account updates with test data.
+8. Only after successful local checks: `git add main.html config.js && git commit -m "EduTask V14 performance" && git push origin main`.
 
-- Admin signs in → Invite intern → Intern registers → OTP verification → Intern signs in.
-- Admin creates project and assigns a task to the intern.
-- Intern sees task, updates progress, adds comments, submits a URL or note.
-- Admin/mentor reviews submission, requests revision, intern resubmits, reviewer approves.
-- Admin exports CSV, then signs out; ensure an invalid session is rejected.
+## Real-world performance tests
 
-## Features actually implemented in source
+Open Chrome DevTools → Console:
 
-- Invitation-only registration, OTP email verification and resend, password reset,
-  salted PBKDF2-HMAC-SHA256 password hashing, secret pepper, token-hashed sessions,
-  backend session validation and revocation, role/access checks, email throttling.
-- CRUD/API for projects, milestones, batches, teams, programs, templates,
-  announcements, task/subtask/comments, daily reports, intern profiles,
-  project members, mentor assignments, evaluation criteria, and app settings.
-- Individual task assignments, progress, submissions, review/revisions/approval,
-  notifications, activity logs, task analytics and CSV exports.
-- Two role-sensitive SPA workspaces, mobile layout, interactive Kanban/table/calendar,
-  profile/password, and reports with backend-owned data; 28 sheet setup.
+```js
+EdutaskPerf.report();
+EdutaskSpeed.report();
+EdutaskLive.status();
+```
 
-## Important constraints and security review
+Then test with DevTools → Network (`Disable cache` OFF for warm tests), refresh twice and observe both **time to shell** and **time to verified data**. Use a normal network condition. For each API request compare `roundtripMs` and `backendMs` before/after V14. Cold Apps Script start, large Sheets, proxy network hops and MailApp may still exceed 1–3 seconds. The simulated millisecond readings in the code test are not production benchmarks.
 
-**Do not assume this project is production-security certified.** Google Apps Script +
-Sheets have execution, concurrency, MailApp, and database-size constraints. The
-custom credential implementation requires independent security review, controlled
-load tests, monitoring, backup/restoration, penetration testing, and operations policies.
+### Why Sheets API v4 isn't the main lever
 
-- PBKDF2 is intentionally low iteration (`12000`) to fit Apps Script's Utilities HMAC
-  costs and a serverless proxy's request duration. This does not meet modern native
-  PBKDF2 cost recommendations. For sensitive production user information, use an
-  established identity provider or a server-side platform with native password hashing.
-- `Utilities.getUuid()` entropy is not documented as a secure random source;
-  token/OTP generation should be replaced with an audited CSPRNG for high-security use.
-- Session tokens live in `sessionStorage`, which means protecting against XSS is
-  essential and sessions end when the tab/browser session closes. No Remember Me.
-- Email notifications depend on MailApp daily quotas. Avoid high-volume invitations.
-- Google Sheets has no actual foreign keys or transactions. Locks limit races but
-  do not provide relational transactional guarantees across tables.
-- There is no binary upload in this version: use links to access-controlled files.
-- Client synchronization uses refresh/on-focus and 120-second polling; not WebSockets.
-- CSV export is provided; PDF export is not implemented.
-- No tests have been run against your real Google account, Apps Script deployment, or
-  Vercel project. End-to-end acceptance criteria require deployment and manual QA.
-- Some advanced capabilities from the specification are not complete, including
-  automated schedules/reminders, bulk workflows, rich permission matrix editor,
-  exhaustive archive restoration, sophisticated analytics slicing, and attachment
-  storage. This package implements a functional core with extensible records/modules,
-  not a claim that all 1,659 lines of requested specifications are fully satisfied.
+The installed backend uses `SpreadsheetApp` inside Apps Script; it does **not** simply become faster by renaming it Sheets API v4. Google's recommendation is to minimize service calls, batch reads/writes, and use caches. `CacheService` cannot replace a robust low-latency database at larger scale.
 
-## API shape
+### One-second synchronization limit
 
-`POST /api/proxy` JSON `{action, payload, token, requestId?}`.
-Response `{success, data, code, message, timestamp}`. The proxy sends requests to
-Google Apps Script and follows its redirects.
+With Apps Script + Google Sheets + periodic polling, a strict **≤1 second across admin/mentor/intern devices is not guaranteed**. To support true near-real-time push, add a dedicated realtime transport (e.g. Firebase Realtime Database, Firestore listeners, or Supabase Realtime) with tenant-aware permissions and a backend write confirmation flow. Do not reduce polling to 1 second for every user; it can exhaust Apps Script execution and concurrent request quotas.
 
-## Operational performance
+## Testing performed
 
-A fast static shell and instant client-side navigation are targeted, not a guarantee.
-Real Apps Script request duration is network/deployment dependent. Measure LCP, INP,
-CLS, API duration and Sheets row growth with Web Vitals and Apps Script execution logs.
-For larger teams, use an API backend and a real database rather than Sheets.
+- JavaScript syntax checks for inline `main.html`, `config.js`, and `Code.gs` succeeded.
+- Fake-Google-Sheets backend test succeeded for setup of 44 tabs, bootstrap admin, login, authorized sessions, cache hit, dashboard, references, invite, registration, email verification, role-cache invalidation, password reset/session revocation, and logout.
+- Automated headless browser navigation was attempted but blocked by the execution environment. Desktop/mobile visual interactions must be tested in your local Vercel environment.
+- This package has **not** been connected to your actual Vercel project, Google account or production Google Sheets.
